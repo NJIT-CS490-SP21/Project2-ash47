@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 sql.env
+
+ __pycache__/models.cpython-36.pyc
+ __pycache__
