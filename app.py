@@ -3,6 +3,8 @@ from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
 
+userList = []
+
 app = Flask(__name__, static_folder='./build/static')
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -33,6 +35,14 @@ def on_disconnect():
 def on_move(data): 
     
     socketio.emit('move',  data, broadcast=True, include_self=False)
+    
+@socketio.on('login')
+def add_user(data): 
+    userList.append(data['newUser'])
+    
+    print(userList)
+    
+    socketio.emit('login',  data, broadcast=True, include_self=False)
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(
