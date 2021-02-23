@@ -1,5 +1,5 @@
 import React from 'react';
-// import { useState } from 'react';
+import { useState } from 'react';
 // import io from 'socket.io-client';
 
 // const socket = io();
@@ -19,6 +19,6 @@ export function Square(props)
     
     
     return(
-        <div class="box" onClick={clickHandler}>{props.value}</div>  
+        <div class={"box " + props.value} onClick={clickHandler}></div>  
     );
 }
