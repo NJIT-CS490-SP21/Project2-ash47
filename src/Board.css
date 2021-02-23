@@ -1,12 +1,15 @@
+body{
+  margin: 0px;
+}
+
 .board {
 	width: 300px; /* Total horizontal dimensions */
 	height: 300px; /* Total vertical dimensions */
 	display: grid; /* Enables CSS Grid */ 
 	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
-    grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
-    padding: 50px;
+  grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
+  padding: 50px;
 }
-
 
 
 .box {
@@ -15,4 +18,28 @@
   font-size: 50px;
   text-align: center;
   padding-top: 10px;
+}
+
+.box:first-child,
+.box:nth-child(2),
+.box:nth-child(3) {
+  border-top: none;
+}
+
+.box:nth-child(1),
+.box:nth-child(4),
+.box:nth-child(7) {
+  border-left: none;
+}
+
+.box:nth-child(3),
+.box:nth-child(6),
+.box:nth-child(9) {
+  border-right: none;
+}
+
+.box:nth-child(7),
+.box:nth-child(8),
+.box:nth-child(9) {
+  border-bottom: none;
 }
