@@ -10,52 +10,64 @@ export function Board()
 {
     const [board, setBoard] = useState([null, null, null, null, null, null, null, null, null]);
     const [turn, setTurn] = useState("X");
-    
-    function changeTurn()
+    /*
+    function changeTurn(id)
     {
-      setTurn(prevTurn => turn === 'X' ? 'O' : 'X');
+      //setTurn(prevTurn => prevTurn === 'X' ? 'O' : 'X');
+      
+      setTurn((prevTurn) => {
+        let nextTurn = '';
+        if(prevTurn === 'X')
+        {
+          nextTurn = 'O';
+        }
+        else
+        {
+          nextTurn = 'X';
+        }
+        socket.emit('move', { move: id, turn: nextTurn });
+        return nextTurn;
+      });
+      
+      console.log(turn);
     }
-    
+    */
     function onClickAction(id)
     {
-      let prevList = [...board];
-      prevList[id] = turn;
-      setBoard(prevList);
-      changeTurn();
-      
-      socket.emit('move', { move: id });
+      // set board
+      setBoard((prevBoard) => {
+        const newBoard = [...prevBoard];
+        newBoard[id] = turn;
+        
+        socket.emit('move', { move: newBoard });
+        
+        return newBoard;
+      })
+      //changeTurn(id);
+      //setTurn(prevTurn => prevTurn === 'X' ? 'O' : 'X');
     }
     
     function resetBoard()
     {
-      console.log(board.length);
       
-      let empty_list = [null, null, null, null, null, null, null, null, null];
-      setBoard(empty_list);
-      setTurn('X');
-      
-      socket.emit('move', {reset: empty_list});
     }
     
     
     useEffect(() => {
       
-    socket.on('move', (data) => {
-      console.log('Chat event received!');
-      console.log(data.move)
-      changeTurn();
-      
-      let list = [...board];
-      list[data.move] = turn;
-      setBoard(list);
-      
-      if(data.reset)
-      {
-        setBoard(data.reset);
-        setTurn('X');
-      }
-    });
-    }, [board]);
+      socket.on('move', (data) =>{
+        
+        setBoard((prevBoard) => {
+          let newBoard = data.move;
+          return newBoard;
+        });
+        
+        // setTurn(data.turn);
+        
+        console.log('received: ' + turn);
+      });
+      //changeTurn();
+    }, []);
     
     return (
     <div>
