@@ -17,7 +17,7 @@ body{
   font-weight: bold;
   font-size: 50px;
   text-align: center;
-  padding-top: 10px;
+  
 }
 
 .box:first-child,
@@ -42,4 +42,27 @@ body{
 .box:nth-child(8),
 .box:nth-child(9) {
   border-bottom: none;
+}
+
+.box.x:after{
+  content: '';
+  height: 100px;
+  border-left: 5px solid black;
+  position: absolute;
+  transform: rotate(45deg);
+}
+
+.box.x:before {
+    content: '';
+    height: 100px;
+    border-left: 5px solid black;
+    position: absolute;
+    transform: rotate(-45deg);
+}
+
+.box.o:after{
+  content: '';
+  height: 90px;
+  border-left: 5px solid black;
+  position: absolute;
 }
