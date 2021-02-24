@@ -6,14 +6,28 @@ import io from 'socket.io-client';
 
 const socket = io();
 
-export function Board()
+export function Board(props)
 {
     const [board, setBoard] = useState([null, null, null, null, null, null, null, null, null]);
     const [turn, setTurn] = useState("X");
     
+    const [ currUser, setCurrUser ] = useState('');
+    
+    useEffect(() => {
+      let arr = props.users;
+      setCurrUser(arr)
+      
+      
+    }, []);
+    console.log(currUser);
     function changeTurn()
     {
       setTurn(prevTurn => turn === 'X' ? 'O' : 'X');
+    }
+    
+    function UserList(props)
+    {
+      return <li>{props.name}</li>
     }
     
     function onClickAction(id)
@@ -28,8 +42,6 @@ export function Board()
     
     function resetBoard()
     {
-      console.log(board.length);
-      
       let empty_list = [null, null, null, null, null, null, null, null, null];
       setBoard(empty_list);
       setTurn('X');
@@ -37,6 +49,10 @@ export function Board()
       socket.emit('move', {reset: empty_list});
     }
     
+    function logout()
+    {
+      
+    }
     
     useEffect(() => {
       
@@ -72,7 +88,12 @@ export function Board()
         <Square id={8} value={board[8]} onClick={onClickAction} />
       </div>
       <button type="button" onClick={resetBoard}>Reset Board</button>
+      <ul class="userBox">
+        {props.users.map(items => <UserList name={items} />)}
+      </ul>
+      <button type="button" onClick={logout}>Logout</button>
     </div>
+    
     );
     
 }

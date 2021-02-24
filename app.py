@@ -42,7 +42,7 @@ def add_user(data):
     
     print(userList)
     
-    socketio.emit('login',  data, broadcast=True, include_self=False)
+    socketio.emit('login',  userList, broadcast=True, include_self=True)
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(

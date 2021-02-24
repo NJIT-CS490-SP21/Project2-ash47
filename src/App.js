@@ -22,7 +22,7 @@ function App() {
   function onClickAction()
   {
     const userName = inputRef.current.value;
-    setUsers(prevList => [...prevList, userName]);
+    //setUsers(prevList => [...prevList, userName]);
     changeLogin();
     
     socket.emit('login', { newUser: userName });
@@ -30,11 +30,10 @@ function App() {
   
   function Login(props)
   {
-    console.log("Something")
     const loginStatus = props.isLoggedIn;
     if(loginStatus)
     {
-      return <Board />
+      return <Board users={users} />
     }
     
     else
@@ -50,6 +49,14 @@ function App() {
     }
     
   }
+  
+  useEffect(() => {
+    
+    socket.on('login', (data) => {
+      setUsers(data);
+    });
+    
+  }, []);
   
   console.log(users);
   
