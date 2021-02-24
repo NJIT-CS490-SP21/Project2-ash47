@@ -16,7 +16,7 @@ function App() {
   const [ currentUser, setCurrentUser ] = useState(null);
   
   
-  function changeLogin()
+  function changeLoginStatus()
   {
     setLoginStatus(currLogin => currLogin === 'loggedIn' ? 'loggedOut' : 'loggedIn');
   }
@@ -25,15 +25,14 @@ function App() {
   {
     const userName = inputRef.current.value;
     setCurrentUser(userName);
-    changeLogin();
-    
+    changeLoginStatus();
     
     socket.emit('login', { newUser: userName });
   }
   
   function logout()
   {
-    changeLogin();
+    changeLoginStatus();
     socket.emit('logout', {user: currentUser});
   }
   

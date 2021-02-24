@@ -11,6 +11,14 @@ export function Board(props)
     const [board, setBoard] = useState([null, null, null, null, null, null, null, null, null]);
     const [turn, setTurn] = useState("X");
     
+    const [ playerX, setPlayerX ] = useState(props.usersList[0]);
+    
+    const [ playerO, setPlayerO ] = useState(props.usersList[1]);
+    
+    
+    console.log(playerX);
+    console.log(playerO);
+    
     function changeTurn()
     {
       setTurn(prevTurn => turn === 'X' ? 'O' : 'X');
