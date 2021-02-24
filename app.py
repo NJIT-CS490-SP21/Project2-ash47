@@ -43,6 +43,15 @@ def add_user(data):
     print(userList)
     
     socketio.emit('login',  userList, broadcast=True, include_self=True)
+    
+    
+@socketio.on('logout')
+def remove_user(data): 
+    userList.remove(data['user'])
+    
+    print(userList)
+    
+    socketio.emit('logout',  userList, broadcast=True, include_self=True)
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(

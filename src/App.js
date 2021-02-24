@@ -3,6 +3,7 @@ import './App.css';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import { Board } from './Board.js';
+import { UserList } from './userList.js';
 import './Board.css';
 
 const socket = io(); // Connects to socket connection
@@ -11,29 +12,47 @@ function App() {
   
   const [ users, setUsers ] = useState([]);
   const inputRef = useRef(null);
-  const [ loginStatus, setLoginStatus ] = useState(false);
+  const [ loginStatus, setLoginStatus ] = useState('loggedOut');
+  const [ currentUser, setCurrentUser ] = useState(null);
   
   
   function changeLogin()
   {
-    setLoginStatus(true);
+    setLoginStatus(currLogin => currLogin === 'loggedIn' ? 'loggedOut' : 'loggedIn');
   }
   
   function onClickAction()
   {
     const userName = inputRef.current.value;
-    //setUsers(prevList => [...prevList, userName]);
+    setCurrentUser(userName);
     changeLogin();
+    
     
     socket.emit('login', { newUser: userName });
   }
   
-  function Login(props)
+  function logout()
+  {
+    changeLogin();
+    socket.emit('logout', {user: currentUser});
+  }
+  
+  function Game(props)
   {
     const loginStatus = props.isLoggedIn;
-    if(loginStatus)
+    
+    if(loginStatus === 'loggedIn')
     {
-      return <Board users={users} />
+      return (
+        <div>
+          <Board usersList={ users } />
+          
+          <ul class="userBox">
+            {users.map(items => <UserList name={items} />)}
+          </ul>
+          <button type="button" onClick={logout}>Logout</button>
+        </div>
+      );
     }
     
     else
@@ -56,6 +75,10 @@ function App() {
       setUsers(data);
     });
     
+    socket.on('logout', (data) => {
+      setUsers(data);
+    });
+    
   }, []);
   
   console.log(users);
@@ -63,7 +86,7 @@ function App() {
   return(
     <center>
       
-      <Login isLoggedIn={loginStatus} />
+      <Game isLoggedIn={loginStatus} />
       
     </center>
   );

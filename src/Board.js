@@ -11,23 +11,9 @@ export function Board(props)
     const [board, setBoard] = useState([null, null, null, null, null, null, null, null, null]);
     const [turn, setTurn] = useState("X");
     
-    const [ currUser, setCurrUser ] = useState('');
-    
-    useEffect(() => {
-      let arr = props.users;
-      setCurrUser(arr)
-      
-      
-    }, []);
-    console.log(currUser);
     function changeTurn()
     {
       setTurn(prevTurn => turn === 'X' ? 'O' : 'X');
-    }
-    
-    function UserList(props)
-    {
-      return <li>{props.name}</li>
     }
     
     function onClickAction(id)
@@ -49,28 +35,23 @@ export function Board(props)
       socket.emit('move', {reset: empty_list});
     }
     
-    function logout()
-    {
-      
-    }
-    
     useEffect(() => {
       
-    socket.on('move', (data) => {
-      console.log('Chat event received!');
-      console.log(data.move)
-      changeTurn();
-      
-      let list = [...board];
-      list[data.move] = turn;
-      setBoard(list);
-      
-      if(data.reset)
-      {
-        setBoard(data.reset);
-        setTurn('X');
-      }
-    });
+      socket.on('move', (data) => {
+        console.log('Chat event received!');
+        console.log(data.move)
+        changeTurn();
+        
+        let list = [...board];
+        list[data.move] = turn;
+        setBoard(list);
+        
+        if(data.reset)
+        {
+          setBoard(data.reset);
+          setTurn('X');
+        }
+      });
     }, [board]);
     
     return (
@@ -88,10 +69,7 @@ export function Board(props)
         <Square id={8} value={board[8]} onClick={onClickAction} />
       </div>
       <button type="button" onClick={resetBoard}>Reset Board</button>
-      <ul class="userBox">
-        {props.users.map(items => <UserList name={items} />)}
-      </ul>
-      <button type="button" onClick={logout}>Logout</button>
+      
     </div>
     
     );
