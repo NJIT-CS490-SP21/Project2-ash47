@@ -15,7 +15,6 @@ export function Board(props)
     
     const [ playerO, setPlayerO ] = useState(props.usersList[1]);
     
-    
     // Checks if Players has logged out
     if(props.playerLogOut === true)
     {
@@ -33,7 +32,7 @@ export function Board(props)
     
     function onClickAction(id)
     {
-      if(props.currentUser === playerX || props.currentUser === playerO)
+      if(props.currentUser === playerX || props.currentUser === playerO )
       {
         let prevList = [...board];
         prevList[id] = turn;

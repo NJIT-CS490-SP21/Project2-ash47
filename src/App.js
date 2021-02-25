@@ -10,8 +10,9 @@ const socket = io(); // Connects to socket connection
 
 function App() {
   
-  const [ users, setUsers ] = useState([]);
   const inputRef = useRef(null);
+  
+  const [ users, setUsers ] = useState([]);
   const [ loginStatus, setLoginStatus ] = useState('loggedOut');
   const [ currentUser, setCurrentUser ] = useState(null);
   
@@ -27,6 +28,7 @@ function App() {
     const userName = inputRef.current.value;
     setCurrentUser(userName);
     changeLoginStatus();
+    setPlayerLogOut(false);
     
     socket.emit('login', { newUser: userName });
   }
