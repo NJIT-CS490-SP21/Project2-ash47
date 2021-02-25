@@ -16,6 +16,13 @@ export function Board(props)
     const [ playerO, setPlayerO ] = useState(props.usersList[1]);
     
     
+    // Checks if Players has logged out
+    if(props.playerLogOut === true)
+    {
+      alert("Logout");
+      //resetBoard();
+    }
+    
     console.log(playerX);
     console.log(playerO);
     
@@ -26,12 +33,15 @@ export function Board(props)
     
     function onClickAction(id)
     {
-      let prevList = [...board];
-      prevList[id] = turn;
-      setBoard(prevList);
-      changeTurn();
-      
-      socket.emit('move', { move: id });
+      if(props.currentUser === playerX || props.currentUser === playerO)
+      {
+        let prevList = [...board];
+        prevList[id] = turn;
+        setBoard(prevList);
+        changeTurn();
+        
+        socket.emit('move', { move: id }); 
+      }
     }
     
     function resetBoard()

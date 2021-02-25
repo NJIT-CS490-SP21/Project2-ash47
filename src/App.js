@@ -15,6 +15,7 @@ function App() {
   const [ loginStatus, setLoginStatus ] = useState('loggedOut');
   const [ currentUser, setCurrentUser ] = useState(null);
   
+  const [ playerLogOut, setPlayerLogOut ] = useState(false);
   
   function changeLoginStatus()
   {
@@ -34,6 +35,12 @@ function App() {
   {
     changeLoginStatus();
     socket.emit('logout', {user: currentUser});
+    
+    if(currentUser === users[0] || currentUser === users[1])
+    {
+      alert("Player logged out");
+      setPlayerLogOut(true);
+    }
   }
   
   function Game(props)
@@ -44,7 +51,7 @@ function App() {
     {
       return (
         <div>
-          <Board usersList={ users } />
+          <Board usersList={ users } playerLogOut={playerLogOut} currentUser={currentUser}/>
           
           <ul class="userBox">
             {users.map(items => <UserList name={items} />)}
