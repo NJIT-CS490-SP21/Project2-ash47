@@ -1,9 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import { Board } from './Board.js';
-import { UserList } from './userList.js';
 import './Board.css';
 
 const socket = io(); // Connects to socket connection
@@ -17,13 +15,14 @@ function App() {
   const [ currentUser, setCurrentUser ] = useState(null);
   
   const [ playerLogOut, setPlayerLogOut ] = useState(false);
+  const [ userCounter, setUserCounter ] = useState([]);
   
   function changeLoginStatus()
   {
     setLoginStatus(currLogin => currLogin === 'loggedIn' ? 'loggedOut' : 'loggedIn');
   }
   
-  function onClickAction()
+  function logIn()
   {
     const userName = inputRef.current.value;
     setCurrentUser(userName);
@@ -45,7 +44,7 @@ function App() {
     }
   }
   
-  function Game(props)
+  function Login(props)
   {
     const loginStatus = props.isLoggedIn;
     
@@ -55,9 +54,15 @@ function App() {
         <div>
           <Board usersList={ users } playerLogOut={playerLogOut} currentUser={currentUser}/>
           
-          <ul class="userBox">
-            {users.map(items => <UserList name={items} />)}
-          </ul>
+          <div className="userBox">
+            {users.map((item, index) => {
+              const counter = userCounter[index];
+              return (
+                <div key={counter}>{counter + '. ' + item}</div>
+              );
+            })}
+            
+          </div>
           <button type="button" onClick={logout}>Logout</button>
         </div>
       );
@@ -69,7 +74,7 @@ function App() {
         
         <div>
           <input ref={inputRef} type="text" name="name" />
-          <button onClick= {onClickAction}>Submit</button>
+          <button onClick= {logIn}>Submit</button>
         </div>
         
       );
@@ -80,21 +85,24 @@ function App() {
   useEffect(() => {
     
     socket.on('login', (data) => {
-      setUsers(data);
+      console.log("data: " + data.userList);
+      setUsers(data['userList']);
+      setUserCounter(data['userNum']);
     });
     
     socket.on('logout', (data) => {
-      setUsers(data);
+      setUsers(data['userList']);
+      setUserCounter(data['userNum']);
     });
     
   }, []);
   
-  console.log(users);
+  //console.log(users);
   
   return(
     <center>
       
-      <Game isLoggedIn={loginStatus} />
+      <Login isLoggedIn={loginStatus} />
       
     </center>
   );

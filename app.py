@@ -4,6 +4,8 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 
 userList = []
+userCount = []
+
 
 app = Flask(__name__, static_folder='./build/static')
 
@@ -40,18 +42,24 @@ def on_move(data):
 def add_user(data): 
     userList.append(data['newUser'])
     
+    if not userCount:
+        userCount.append(1)
+    else:
+        userCount.append(userCount[(len(userCount) - 1)] + 1)
+        
     print(userList)
-    
-    socketio.emit('login',  userList, broadcast=True, include_self=True)
+    print(userCount)
+    socketio.emit('login',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
     
     
 @socketio.on('logout')
 def remove_user(data): 
     userList.remove(data['user'])
+    userCount.pop()
     
     print(userList)
-    
-    socketio.emit('logout',  userList, broadcast=True, include_self=True)
+    print(userCount)
+    socketio.emit('logout',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(

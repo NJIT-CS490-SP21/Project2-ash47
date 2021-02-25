@@ -15,6 +15,7 @@ export function Board(props)
     
     const [ playerO, setPlayerO ] = useState(props.usersList[1]);
     
+    
     // Checks if Players has logged out
     if(props.playerLogOut === true)
     {
@@ -32,7 +33,7 @@ export function Board(props)
     
     function onClickAction(id)
     {
-      if(props.currentUser === playerX || props.currentUser === playerO )
+      if(props.currentUser === playerX || props.currentUser === playerO && playerO)
       {
         let prevList = [...board];
         prevList[id] = turn;
@@ -55,8 +56,8 @@ export function Board(props)
     useEffect(() => {
       
       socket.on('move', (data) => {
-        console.log('Chat event received!');
-        console.log(data.move)
+        //console.log('Chat event received!');
+        //console.log(data.move)
         changeTurn();
         
         let list = [...board];
@@ -74,7 +75,7 @@ export function Board(props)
     return (
     <div>
       <h1>Next turn {turn}</h1>
-      <div class="board">
+      <div className="board">
         <Square id={0} value={board[0]} onClick={onClickAction} />
         <Square id={1} value={board[1]} onClick={onClickAction} />
         <Square id={2} value={board[2]} onClick={onClickAction} />

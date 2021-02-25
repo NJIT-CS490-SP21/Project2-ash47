@@ -19,6 +19,6 @@ export function Square(props)
     
     
     return(
-        <div class={"box " + props.value} onClick={clickHandler}></div>  
+        <div className={"box " + props.value} onClick={clickHandler}></div>  
     );
 }
