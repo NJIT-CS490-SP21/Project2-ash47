@@ -2,3 +2,23 @@
   text-align: center;
 }
 
+.gameBoard{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr 30px;
+    margin: 10px;
+    text-align: left;
+}
+
+.userBox{
+    font-weight: bold;
+    text-aligh: left;
+}
+
+.board_wrap
+{
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
