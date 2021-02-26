@@ -15,10 +15,8 @@ function App() {
   
   const [ loginStatus, setLoginStatus ] = useState('loggedOut');
   const [ currentUser, setCurrentUser ] = useState(null);
-  const [ playerLogOut, setPlayerLogOut ] = useState(false);
   
   const [ emptyInput, setEmptyInput ] = useState(false);
-  console.log(emptyInput);
   
   function changeLoginStatus()
   {
@@ -30,17 +28,14 @@ function App() {
     const userName = inputRef.current.value;
     if( userName != "" )
     {
-      console.log(userName);
       setCurrentUser(userName);
       changeLoginStatus();
-      setPlayerLogOut(false);
       
       socket.emit('login', { newUser: userName });
     }
     else
     {
       setEmptyInput(true);
-      console.log(emptyInput);
     }
   }
   
@@ -51,8 +46,8 @@ function App() {
     
     if(currentUser === users[0] || currentUser === users[1])
     {
-      alert("Player logged out");
-      setPlayerLogOut(true);
+      let empty_list = [null, null, null, null, null, null, null, null, null];
+      socket.emit('move', {reset: empty_list});
     }
   }
   
@@ -90,7 +85,7 @@ function App() {
             })}
             
           </div>
-          <Board usersList={ users } playerLogOut={playerLogOut} currentUser={currentUser}/>
+          <Board usersList={ users } currentUser={currentUser}/>
           <div>
             <button type="button" onClick={logout}>Logout</button>
           </div>

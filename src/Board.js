@@ -35,7 +35,6 @@ export function Board(props)
             newBoard = data;
             return newBoard;
           });
-          console.log('useeffect is active');
         }
       });
       
@@ -43,11 +42,7 @@ export function Board(props)
         
     }, []);
     
-    if(props.playerLogOut === true)
-    {
-      resetBoard();
-      alert("Logout");
-    }
+    
     
     
     function changeTurn()
@@ -82,7 +77,6 @@ export function Board(props)
     
     function resetBoard()
     {
-      alert('reset');
       let empty_list = [null, null, null, null, null, null, null, null, null];
       setBoard(empty_list);
       setTurn('X');
