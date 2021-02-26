@@ -11,11 +11,11 @@ function App() {
   const inputRef = useRef(null);
   
   const [ users, setUsers ] = useState([]);
+  const [ userCounter, setUserCounter ] = useState([]);
+  
   const [ loginStatus, setLoginStatus ] = useState('loggedOut');
   const [ currentUser, setCurrentUser ] = useState(null);
-  
   const [ playerLogOut, setPlayerLogOut ] = useState(false);
-  const [ userCounter, setUserCounter ] = useState([]);
   
   function changeLoginStatus()
   {
@@ -48,27 +48,7 @@ function App() {
   {
     const loginStatus = props.isLoggedIn;
     
-    if(loginStatus === 'loggedIn')
-    {
-      return (
-        <div>
-          <Board usersList={ users } playerLogOut={playerLogOut} currentUser={currentUser}/>
-          
-          <div className="userBox">
-            {users.map((item, index) => {
-              const counter = userCounter[index];
-              return (
-                <div key={counter}>{counter + '. ' + item}</div>
-              );
-            })}
-            
-          </div>
-          <button type="button" onClick={logout}>Logout</button>
-        </div>
-      );
-    }
-    
-    else
+    if(loginStatus !== 'loggedIn')
     {
       return (
         
@@ -77,6 +57,31 @@ function App() {
           <button onClick= {logIn}>Submit</button>
         </div>
         
+      );
+      
+    }
+    
+    else
+    {
+      return (
+        <div className="gameBoard">
+          
+          <div className="userBox">
+            {users.map((item, index) => {
+              const counter = userCounter[index];
+              return (
+                <div key={counter}>
+                  {counter + '. ' + item}
+                </div>
+              );
+            })}
+            
+          </div>
+          <Board usersList={ users } playerLogOut={playerLogOut} currentUser={currentUser}/>
+          <div>
+            <button type="button" onClick={logout}>Logout</button>
+          </div>
+        </div>
       );
     }
     
