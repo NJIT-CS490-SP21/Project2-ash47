@@ -4,21 +4,20 @@
 
 .gameBoard{
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: 1fr 30px;
+    grid-template-columns: 235px 500px;
+    grid-template-rows: 485px 30px;
     margin: 10px;
-    text-align: left;
 }
 
 .userBox{
     font-weight: bold;
-    text-aligh: left;
+    text-align: left;
 }
 
 .board_wrap
 {
     grid-column-start: 2;
-    grid-column-end: 4;
+    grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 3;
 }

@@ -21,7 +21,6 @@ export function Board(props)
       
       if(props.currentUser !== playerX && props.currentUser !== playerO)
       {
-        //alert('guest');
         setSpectator(true);
       }
       
@@ -36,6 +35,7 @@ export function Board(props)
             newBoard = data;
             return newBoard;
           });
+          console.log('useeffect is active');
         }
       });
       
@@ -124,10 +124,11 @@ export function Board(props)
         <Square id={8} value={board[8]} onClick={onClickAction} />
       </div>
       {spectator === true ?
-      <div></div> :
-      <div>
-        <button type="button" onClick={resetBoard}>Reset Board</button> 
-      </div>
+        <div></div> 
+        :
+        <div>
+          <button type="button" onClick={resetBoard}>Reset Board</button> 
+        </div>
       }
       
     </div>

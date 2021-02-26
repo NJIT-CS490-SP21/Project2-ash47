@@ -17,6 +17,9 @@ function App() {
   const [ currentUser, setCurrentUser ] = useState(null);
   const [ playerLogOut, setPlayerLogOut ] = useState(false);
   
+  const [ emptyInput, setEmptyInput ] = useState(false);
+  console.log(emptyInput);
+  
   function changeLoginStatus()
   {
     setLoginStatus(currLogin => currLogin === 'loggedIn' ? 'loggedOut' : 'loggedIn');
@@ -25,11 +28,20 @@ function App() {
   function logIn()
   {
     const userName = inputRef.current.value;
-    setCurrentUser(userName);
-    changeLoginStatus();
-    setPlayerLogOut(false);
-    
-    socket.emit('login', { newUser: userName });
+    if( userName != "" )
+    {
+      console.log(userName);
+      setCurrentUser(userName);
+      changeLoginStatus();
+      setPlayerLogOut(false);
+      
+      socket.emit('login', { newUser: userName });
+    }
+    else
+    {
+      setEmptyInput(true);
+      console.log(emptyInput);
+    }
   }
   
   function logout()
@@ -53,8 +65,9 @@ function App() {
       return (
         
         <div>
-          <input ref={inputRef} type="text" name="name" />
-          <button onClick= {logIn}>Submit</button>
+          <input ref={inputRef} type="text" />
+          {emptyInput === false ? "" : <div className="errMsg">Please enter a valid username</div>}
+          <div><button onClick= {logIn}>Submit</button></div>
         </div>
         
       );
