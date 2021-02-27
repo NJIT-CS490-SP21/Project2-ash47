@@ -8,7 +8,6 @@ body{
 	display: grid; /* Enables CSS Grid */ 
 	grid-template-columns: repeat(3, 1fr); /* Total horizontal space broken into 3 columns */
   grid-template-rows: repeat(3, 1fr); /* Total vertical space broken into 3 rows */
-  padding: 50px;
 }
 
 
@@ -80,4 +79,108 @@ body{
     background: white;
     position: absolute;
     transform: translate(-50%, 20%);
+}
+
+.gameBoard{
+    display: grid;
+    grid-template-columns: 235px 650px;
+    grid-template-rows: 520px 30px;
+    margin: 10px;
+    gap: 5px;
+}
+
+.userBox{
+    font-weight: bold;
+    text-align: left;
+    border: solid;
+    border-radius: 15px;
+    padding: 15px;
+    overflow: auto;
+}
+
+.board_wrap
+{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    border: solid;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.board_grid{
+    display: grid;
+    grid-template-rows: 25% 75% 10%;
+    grid-template-columns: 20% 60% 20%;
+}
+
+.wrap{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.errMsg {
+    color: red;
+}
+
+.input {
+    width: 315px;
+    height: 30px;
+    border-color: black;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 5px;
+    padding-left: 20px;
+}
+
+.heading {
+    font-weight: bold;
+    font-size: 50px;
+}
+
+.button {
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 5px;
+    background: white;
+    border-width: 1px;
+}
+
+.button:hover{
+    cursor: pointer;
+    background-color: black;
+    color: white;
+}
+
+.turnH {
+    grid-row-start: 1;
+    /* grid-row-end: 2; */
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.pX{
+  font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pO{
+  font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.resetBtn{
+    grid-column-end: 3;
+}
+
+.logOutbtn{
+    grid-column-start: 1;
+    grid-column-end: 3;
 }

@@ -110,9 +110,14 @@ export function Board(props)
     
     return (
     <div className="board_wrap">
-      {winner !== null ? <h1>Winner is: {winner}</h1> : <h1>Next turn {turn}</h1>}
-      <div>{playerX}</div>
-      <div>{playerO}</div>
+      <div className="board_grid">
+      {winner !== null ? 
+        [winner === 'X' ? <div className="turnH"><h1>Winner is: {winner + ' ' + playerX + '!!'}</h1></div>:
+                          <div className="turnH"><h1>Winner is: {winner + ' ' + playerO + '!!'}</h1></div>] : 
+        <div className="turnH"><h1>Welcome to tic tac toe {props.currentUser}</h1></div>
+        
+      }
+      {turn==='X' ? <div className="pX"><b>{'X ' + playerX}</b></div> : <div className="pX">{'X ' + playerX}</div>}
       <div className="board">
         <Square id={0} value={board[0]} onClick={onClickAction} />
         <Square id={1} value={board[1]} onClick={onClickAction} />
@@ -124,14 +129,15 @@ export function Board(props)
         <Square id={7} value={board[7]} onClick={onClickAction} />
         <Square id={8} value={board[8]} onClick={onClickAction} />
       </div>
+      {turn==='O' ? <div className="pO"><b>{'O ' + playerO}</b></div> : <div className="pO">{'O ' + playerO}</div>}
       {spectator === true ?
         <div></div> 
         :
-        <div>
-          <button calssName="button" type="button" onClick={resetBoard}>Reset Board</button> 
+        <div className="resetBtn">
+          <button className="button" type="button" onClick={resetBoard}>Reset Board</button> 
         </div>
       }
-      
+      </div>
     </div>
     
     );

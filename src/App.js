@@ -99,7 +99,7 @@ function App() {
             
           </div>
           <Board usersList={ users } currentUser={currentUser}/>
-          <div>
+          <div className="logOutbtn">
             <button className="button" type="button" onClick={logout}>Logout</button>
           </div>
         </div>
