@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import './Board.css';
 import { Square } from './square.js';
+import { calculateWinner } from './winner.js';
 import io from 'socket.io-client';
 
 const socket = io();
@@ -16,6 +17,8 @@ export function Board(props)
     
     const [ spectator, setSpectator ] = useState(false);
     
+    const winner = calculateWinner(board);
+    
     useEffect(() => {
       let mounted = true;
       
@@ -27,12 +30,11 @@ export function Board(props)
       socket.emit('currentBoard');
       
         socket.on('currentBoard', (data) => {
-        //setBoard(data);
         if(mounted)
         {
           setBoard((prevData) => {
             let newBoard = [...prevData];
-            newBoard = data;
+            newBoard = data.board;
             return newBoard;
           });
         }
@@ -65,6 +67,8 @@ export function Board(props)
     
     function onClickAction(id)
     {
+      if(winner === null)
+      {
         if(props.currentUser === playerX && turn === 'X')
         {
           updateBoard(id);
@@ -73,6 +77,7 @@ export function Board(props)
         {
           updateBoard(id);
         }
+      }
     }
     
     function resetBoard()
@@ -105,7 +110,9 @@ export function Board(props)
     
     return (
     <div className="board_wrap">
-      <h1>Next turn {turn}</h1>
+      {winner !== null ? <h1>Winner is: {winner}</h1> : <h1>Next turn {turn}</h1>}
+      <b>{playerX}</b>
+      <b>{playerO}</b>
       <div className="board">
         <Square id={0} value={board[0]} onClick={onClickAction} />
         <Square id={1} value={board[1]} onClick={onClickAction} />

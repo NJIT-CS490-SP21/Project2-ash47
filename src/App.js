@@ -77,10 +77,14 @@ function App() {
           <div className="userBox">
             {users.map((item, index) => {
               const counter = userCounter[index];
+              
               return (
+              <div>
                 <div key={counter}>
                   {counter + '. ' + item}
                 </div>
+                {index == 1 ? <div><b>Spectators: </b></div> : <b></b>}
+              </div>
               );
             })}
             
@@ -98,7 +102,7 @@ function App() {
   useEffect(() => {
     
     socket.on('login', (data) => {
-      console.log("data: " + data.userList);
+      //console.log("data: " + data.userList);
       setUsers(data['userList']);
       setUserCounter(data['userNum']);
     });
