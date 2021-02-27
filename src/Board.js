@@ -111,8 +111,8 @@ export function Board(props)
     return (
     <div className="board_wrap">
       {winner !== null ? <h1>Winner is: {winner}</h1> : <h1>Next turn {turn}</h1>}
-      <b>{playerX}</b>
-      <b>{playerO}</b>
+      <div>{playerX}</div>
+      <div>{playerO}</div>
       <div className="board">
         <Square id={0} value={board[0]} onClick={onClickAction} />
         <Square id={1} value={board[1]} onClick={onClickAction} />
@@ -128,7 +128,7 @@ export function Board(props)
         <div></div> 
         :
         <div>
-          <button type="button" onClick={resetBoard}>Reset Board</button> 
+          <button calssName="button" type="button" onClick={resetBoard}>Reset Board</button> 
         </div>
       }
       

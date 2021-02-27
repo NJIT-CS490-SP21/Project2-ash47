@@ -59,10 +59,17 @@ function App() {
     {
       return (
         
-        <div>
-          <input ref={inputRef} type="text" />
-          {emptyInput === false ? "" : <div className="errMsg">Please enter a valid username</div>}
-          <div><button onClick= {logIn}>Submit</button></div>
+        <div className="wrap">
+          <div className="loginBox">
+            <div className="heading">Welcome to tic-tac-toe!!</div>
+            <h3>Please enter your username to login</h3>
+            <br></br>
+            <br></br>
+            <input className="input" ref={inputRef} type="text" placeholder="User name...."/>
+            {emptyInput === false ? "" : <div className="errMsg">Please enter a valid username</div>}
+            <br></br>
+            <div><button className="button" type="submit" onClick= {logIn}>Submit</button></div>
+          </div>
         </div>
         
       );
@@ -72,6 +79,7 @@ function App() {
     else
     {
       return (
+        <div className="wrap">
         <div className="gameBoard">
           
           <div className="userBox">
@@ -80,10 +88,11 @@ function App() {
               
               return (
               <div>
+                {index == 0 ? <div><b>Players: </b></div> : <b></b>}
                 <div key={counter}>
                   {counter + '. ' + item}
                 </div>
-                {index == 1 ? <div><b>Spectators: </b></div> : <b></b>}
+                {index == 1 ? <div><br></br><b>Spectators: </b></div> : <b></b>}
               </div>
               );
             })}
@@ -91,8 +100,9 @@ function App() {
           </div>
           <Board usersList={ users } currentUser={currentUser}/>
           <div>
-            <button type="button" onClick={logout}>Logout</button>
+            <button className="button" type="button" onClick={logout}>Logout</button>
           </div>
+        </div>
         </div>
       );
     }
