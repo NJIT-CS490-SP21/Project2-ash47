@@ -5,7 +5,8 @@ from flask_cors import CORS
 
 userList = []
 userCount = []
-
+currTurn = ['X']
+boardState = [None, None, None, None, None, None, None, None, None]
 
 app = Flask(__name__, static_folder='./build/static')
 
@@ -36,6 +37,18 @@ def on_disconnect():
 @socketio.on('move')
 def on_move(data): 
     
+    try:
+        boardState[data['move']] = data['turn']
+        
+        if data['turn'] == 'X':
+            currTurn[0] = 'O'
+        else:
+            currTurn[0] = 'X'
+            
+    except:
+        for i in range (len(boardState)):
+            boardState[i] = None
+    
     socketio.emit('move',  data, broadcast=True, include_self=False)
     
 @socketio.on('login')
@@ -61,6 +74,13 @@ def remove_user(data):
     print(userCount)
     socketio.emit('logout',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
 
+
+@socketio.on('currentBoard')
+
+def get_current_board():
+    print("Requeust recieved");
+    socketio.emit('currentBoard', {'board': boardState, 'turn': currTurn})
+    
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 socketio.run(
     app,

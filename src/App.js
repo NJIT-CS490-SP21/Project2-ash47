@@ -11,11 +11,12 @@ function App() {
   const inputRef = useRef(null);
   
   const [ users, setUsers ] = useState([]);
+  const [ userCounter, setUserCounter ] = useState([]);
+  
   const [ loginStatus, setLoginStatus ] = useState('loggedOut');
   const [ currentUser, setCurrentUser ] = useState(null);
   
-  const [ playerLogOut, setPlayerLogOut ] = useState(false);
-  const [ userCounter, setUserCounter ] = useState([]);
+  const [ emptyInput, setEmptyInput ] = useState(false);
   
   function changeLoginStatus()
   {
@@ -25,11 +26,17 @@ function App() {
   function logIn()
   {
     const userName = inputRef.current.value;
-    setCurrentUser(userName);
-    changeLoginStatus();
-    setPlayerLogOut(false);
-    
-    socket.emit('login', { newUser: userName });
+    if( userName != "" )
+    {
+      setCurrentUser(userName);
+      changeLoginStatus();
+      
+      socket.emit('login', { newUser: userName });
+    }
+    else
+    {
+      setEmptyInput(true);
+    }
   }
   
   function logout()
@@ -39,8 +46,8 @@ function App() {
     
     if(currentUser === users[0] || currentUser === users[1])
     {
-      alert("Player logged out");
-      setPlayerLogOut(true);
+      let empty_list = [null, null, null, null, null, null, null, null, null];
+      socket.emit('move', {reset: empty_list});
     }
   }
   
@@ -48,35 +55,45 @@ function App() {
   {
     const loginStatus = props.isLoggedIn;
     
-    if(loginStatus === 'loggedIn')
+    if(loginStatus !== 'loggedIn')
     {
       return (
+        
         <div>
-          <Board usersList={ users } playerLogOut={playerLogOut} currentUser={currentUser}/>
-          
-          <div className="userBox">
-            {users.map((item, index) => {
-              const counter = userCounter[index];
-              return (
-                <div key={counter}>{counter + '. ' + item}</div>
-              );
-            })}
-            
-          </div>
-          <button type="button" onClick={logout}>Logout</button>
+          <input ref={inputRef} type="text" />
+          {emptyInput === false ? "" : <div className="errMsg">Please enter a valid username</div>}
+          <div><button onClick= {logIn}>Submit</button></div>
         </div>
+        
       );
+      
     }
     
     else
     {
       return (
-        
-        <div>
-          <input ref={inputRef} type="text" name="name" />
-          <button onClick= {logIn}>Submit</button>
+        <div className="gameBoard">
+          
+          <div className="userBox">
+            {users.map((item, index) => {
+              const counter = userCounter[index];
+              
+              return (
+              <div>
+                <div key={counter}>
+                  {counter + '. ' + item}
+                </div>
+                {index == 1 ? <div><b>Spectators: </b></div> : <b></b>}
+              </div>
+              );
+            })}
+            
+          </div>
+          <Board usersList={ users } currentUser={currentUser}/>
+          <div>
+            <button type="button" onClick={logout}>Logout</button>
+          </div>
         </div>
-        
       );
     }
     
@@ -85,7 +102,7 @@ function App() {
   useEffect(() => {
     
     socket.on('login', (data) => {
-      console.log("data: " + data.userList);
+      //console.log("data: " + data.userList);
       setUsers(data['userList']);
       setUserCounter(data['userNum']);
     });
