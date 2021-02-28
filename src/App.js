@@ -61,7 +61,7 @@ function App() {
         
         <div className="wrap">
           <div className="loginBox">
-            <div className="heading">Welcome to tic-tac-toe!!</div>
+            <div className="heading">Welcome to my app..!!</div>
             <h3>Please enter your username to login</h3>
             <br></br>
             <br></br>

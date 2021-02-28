@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 export function Square(props)
 {
-    // const [text, setText] = useState('');
     
     function clickHandler()
     {

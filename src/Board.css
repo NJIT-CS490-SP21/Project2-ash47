@@ -19,6 +19,10 @@ body{
   position: relative;
 }
 
+.box:hover{
+  cursor:pointer;
+}
+
 .box:first-child,
 .box:nth-child(2),
 .box:nth-child(3) {
