@@ -44,9 +44,6 @@ export function Board(props)
         
     }, []);
     
-    
-    
-    
     function changeTurn()
     {
       setTurn(prevTurn => turn === 'X' ? 'O' : 'X');
