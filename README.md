@@ -41,11 +41,6 @@ heroku buildpacks:add --index 1 heroku/nodejs
 git push heroku main
 ```
 
-<details>
-  <summary>Incase </summary>
-  
-  
-</details>
 
 ## Issues
 
@@ -63,7 +58,8 @@ git push heroku main
   * **Bug:** Board would be blank if a user joins mid-game, and would only see moves made after after the point he/she joined the server.
     + **Fix:** To fix the issue, I made an array on server side which whould keep track of current state of the game board and current turn. And any time a user that is not a player (first two users) joins the server. A request from client side is sent asking for the latest state of the board. 
 
- * **Bug:**
+ * **Bug:** Anyone can reset the game board
+    + **Fix:** To fix this issue, I checked if current player is one of the first two playes in the queue, and if not, the reset button would not be accesiable to the current user.
 </details>
 
 
