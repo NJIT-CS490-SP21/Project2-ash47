@@ -98,7 +98,7 @@ function App() {
             })}
             
           </div>
-          <Board usersList={ users } currentUser={currentUser}/>
+          <Board usersList={ users } currentUser={currentUser} socket={socket}/>
           <div className="logOutbtn">
             <button className="button" type="button" onClick={logout}>Logout</button>
           </div>
@@ -110,6 +110,9 @@ function App() {
   }
   
   useEffect(() => {
+    socket.on('all_users', (data) => {
+      console.log(data);
+    });
     
     socket.on('login', (data) => {
       //console.log("data: " + data.userList);

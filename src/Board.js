@@ -5,15 +5,13 @@ import { Square } from './square.js';
 import { calculateWinner } from './winner.js';
 import io from 'socket.io-client';
 
-const socket = io();
-
 export function Board(props)
 {
     const [board, setBoard] = useState([null, null, null, null, null, null, null, null, null]);
     const [turn, setTurn] = useState("X");
     
-    const [ playerX, setPlayerX ] = useState(props.usersList[0]);
-    const [ playerO, setPlayerO ] = useState(props.usersList[1]);
+    const playerX = props.usersList[0];
+    const playerO = props.usersList[1];
     
     const [ spectator, setSpectator ] = useState(false);
     
@@ -27,9 +25,9 @@ export function Board(props)
         setSpectator(true);
       }
       
-      socket.emit('currentBoard');
+      props.socket.emit('currentBoard');
       
-        socket.on('currentBoard', (data) => {
+        props.socket.on('currentBoard', (data) => {
         if(mounted)
         {
           setBoard((prevData) => {
@@ -59,7 +57,7 @@ export function Board(props)
       
       changeTurn();
       
-      socket.emit('move', { move: id, turn: turn });
+      props.socket.emit('move', { move: id, turn: turn });
     }
     
     function onClickAction(id)
@@ -83,12 +81,12 @@ export function Board(props)
       setBoard(empty_list);
       setTurn('X');
       
-      socket.emit('move', {reset: empty_list});
+      props.socket.emit('move', {reset: empty_list});
     }
     
     useEffect(() => {
       
-      socket.on('move', (data) => {
+      props.socket.on('move', (data) => {
         changeTurn();
         
         setBoard((prevList) => {

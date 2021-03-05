@@ -72,6 +72,17 @@ def on_move(data):
     
 @socketio.on('login')
 def add_user(data): 
+    user = data['newUser']
+    exists = db.session.query(Person.username).filter_by(username=user).first() is not None
+    print(exists)
+    
+    if not exists:
+        rows = db.session.query(Person).count()
+        newPerson = Person(username=user, score=100, rank=rows+1)
+        db.session.add(newPerson)   
+        db.session.commit()
+        
+    print(Person.query.all())
     userList.append(data['newUser'])
     
     if not userCount:
