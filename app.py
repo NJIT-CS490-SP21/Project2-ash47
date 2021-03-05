@@ -118,6 +118,11 @@ def get_current_board():
     print("Requeust recieved");
     socketio.emit('currentBoard', {'board': boardState, 'turn': currTurn})
     
+@socketio.on('changeStats')
+
+def updateScore(data):
+    print(data)
+    
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":
     socketio.run(
