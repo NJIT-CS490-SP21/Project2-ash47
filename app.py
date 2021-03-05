@@ -84,11 +84,13 @@ def add_user(data):
     print(db.session.query(Person.rank).filter_by(username=user).first())
     
     users = []
+    score = []
     
     for person in persons:
         users.append(person.username)
+        score.append(person.score)
     
-    socketio.emit('all_users', {"Users": users})
+    socketio.emit('all_users', {'users': users, 'score': score})
     
     userList.append(user)
     
@@ -124,10 +126,8 @@ def updateScore(data):
     updateWinner = Person.query.filter_by(username=data['winner']).first()
     updateLosser = Person.query.filter_by(username=data['losser']).first()
     
-    print(updateWinner.score)
     updateWinner.score =  updateWinner.score + 1
     updateLosser.score =  updateLosser.score - 1
-    print(updateWinner.score)
     
     db.session.commit()
     

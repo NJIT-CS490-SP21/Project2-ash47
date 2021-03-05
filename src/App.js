@@ -2,6 +2,8 @@ import './App.css';
 import { useState, useRef, useEffect } from 'react';
 import io from 'socket.io-client';
 import { Board } from './Board.js';
+import { Leaderboard } from './leaderboard.js';
+import { UserBox } from './userbox.js';
 import './Board.css';
 
 const socket = io(); // Connects to socket connection
@@ -19,10 +21,12 @@ function App() {
   const [ emptyInput, setEmptyInput ] = useState(false);
   
   const [ leaderBoard, setLeaderBoard ] = useState([]);
+  const [ score, setScore ] = useState([]);
   
   useEffect(() => {
     socket.on('all_users', (data) => {
-      setLeaderBoard(prevList => prevList = data.Users)
+      setLeaderBoard(prevList => prevList = data.users);
+      setScore(prevList => prevList = data.score)
     });
     
     socket.on('login', (data) => {
@@ -102,29 +106,13 @@ function App() {
         <div className="wrap">
         <div className="gameBoard">
           <div className="turnH"><h1>Welcome to tic tac toe {currentUser}</h1></div>
-          <div className="userBox">
-            {users.map((item, index) => {
-              const counter = userCounter[index];
-              
-              return (
-              <div>
-                {index == 0 ? <div><b>Players: </b></div> : <b></b>}
-                <div key={counter}>
-                  {counter + '. ' + item}
-                </div>
-                {index == 1 ? <div><br></br><b>Spectators: </b></div> : <b></b>}
-              </div>
-              );
-            })}
-            
-          </div>
+          
+          <UserBox users={users} userCounter={userCounter} />
+          
           <Board usersList={ users } currentUser={currentUser} socket={socket}/>
           
-          <div className="leaderBoard">
-            {leaderBoard.map((item, inbex) => (
-              <div>{item}</div>
-            ))}
-          </div>
+          <Leaderboard leaderBoard={leaderBoard} score={score} />
+          
           <div className="logOutbtn">
             <button className="button" type="button" onClick={logout}>Logout</button>
           </div>
