@@ -1,9 +1,8 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
 import './Board.css';
 import { Square } from './square.js';
 import { calculateWinner } from './winner.js';
-import io from 'socket.io-client';
+import { isDraw } from './checkDraw';
 
 export function Board(props)
 {
@@ -16,6 +15,7 @@ export function Board(props)
     const [ spectator, setSpectator ] = useState(false);
     
     const winner = calculateWinner(board);
+    const draw = isDraw(board);
     
     useEffect(() => {
       let mounted = true;
@@ -110,11 +110,13 @@ export function Board(props)
     return (
     <div className="board_wrap">
       <div className="board_grid">
-      {winner !== null ? 
-        [winner === 'X' ? <div className="turnH"><h1>Winner is: {winner + ' ' + playerX + '!!'}</h1></div>:
-                          <div className="turnH"><h1>Winner is: {winner + ' ' + playerO + '!!'}</h1></div>] : 
-        <div className="turnH"></div>
-        
+      {draw === true ?
+        <div className="turnH"><h1>It's a draw..!!</h1></div> :
+        [winner !== null ? 
+          [winner === 'X' ? <div className="turnH"><h1>Winner is: {winner + ' ' + playerX + '!!'}</h1></div>:
+                            <div className="turnH"><h1>Winner is: {winner + ' ' + playerO + '!!'}</h1></div>] : 
+          <div className="turnH"></div>
+        ]
       }
       {turn==='X' ? <div className="pX"><b>{'X ' + playerX}</b></div> : <div className="pX">{'X ' + playerX}</div>}
       <div className="board">
@@ -132,7 +134,7 @@ export function Board(props)
       {spectator === true ?
         <div></div> 
         :
-        [winner !== null ?
+        [winner !== null || draw === true ?
           <div className="resetBtn">
             <button className="button" type="button" onClick={resetBoard}>Reset Board</button> 
           </div>:

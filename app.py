@@ -27,8 +27,6 @@ userCount = []
 currTurn = ['X']
 boardState = [None, None, None, None, None, None, None, None, None]
 
-#app = Flask(__name__, static_folder='./build/static')
-
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 socketio = SocketIO(
