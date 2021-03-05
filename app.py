@@ -131,6 +131,18 @@ def updateScore(data):
     
     db.session.commit()
     
+    persons = Person.query.all()
+    '''
+    users = []
+    score = []
+    
+    for person in persons:
+        users.append(person.username)
+        score.append(person.score)
+    print(users)
+    print(score)
+    socketio.emit('all_users', {'users': users, 'score': score})
+    '''
     
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":

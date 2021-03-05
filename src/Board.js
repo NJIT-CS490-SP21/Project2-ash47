@@ -12,11 +12,10 @@ export function Board(props)
     
     const playerX = props.usersList[0];
     const playerO = props.usersList[1];
-    const winner = calculateWinner(board);
+    const winner = calculateWinner(board, props.socket);
     const draw = isDraw(board);
     
     useEffect(() => {
-      console.log(winner);
       if(winner !== null)
       {
         if(winner === 'X' && props.currentUser === playerX)

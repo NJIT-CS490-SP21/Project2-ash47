@@ -1,5 +1,5 @@
 
-export function calculateWinner(squares) 
+export function calculateWinner(squares, socket) 
 {
 	const lines = [
 		[0, 1, 2],

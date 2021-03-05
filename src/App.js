@@ -26,7 +26,7 @@ function App() {
   useEffect(() => {
     socket.on('all_users', (data) => {
       setLeaderBoard(prevList => prevList = data.users);
-      setScore(prevList => prevList = data.score)
+      setScore(prevList => prevList = data.score);
     });
     
     socket.on('login', (data) => {
