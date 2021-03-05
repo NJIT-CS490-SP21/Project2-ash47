@@ -62,7 +62,7 @@ export function Board(props)
     
     function changeTurn()
     {
-      setTurn(prevTurn => turn === 'X' ? 'O' : 'X');
+      setTurn(prevTurn => prevTurn === 'X' ? 'O' : 'X');
     }
     
     function updateBoard(id)
@@ -103,13 +103,12 @@ export function Board(props)
     }
     
     useEffect(() => {
-      
       props.socket.on('move', (data) => {
         changeTurn();
         
         setBoard((prevList) => {
             let newBoard = [...prevList];
-            newBoard[data.move] = turn;
+            newBoard[data.move] = data.turn;
             return newBoard;
         });
         
@@ -119,7 +118,7 @@ export function Board(props)
           setTurn('X');
         }
       });
-    }, [board]);
+    }, []);
     
     return (
       <div className="board_wrap">
