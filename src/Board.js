@@ -25,6 +25,10 @@ export function Board(props)
         setSpectator(true);
       }
       
+      props.socket.on('all_users', (data) => {
+        console.log(data);
+      });
+      
       props.socket.emit('currentBoard');
       
         props.socket.on('currentBoard', (data) => {
@@ -109,7 +113,7 @@ export function Board(props)
       {winner !== null ? 
         [winner === 'X' ? <div className="turnH"><h1>Winner is: {winner + ' ' + playerX + '!!'}</h1></div>:
                           <div className="turnH"><h1>Winner is: {winner + ' ' + playerO + '!!'}</h1></div>] : 
-        <div className="turnH"><h1>Welcome to tic tac toe {props.currentUser}</h1></div>
+        <div className="turnH"></div>
         
       }
       {turn==='X' ? <div className="pX"><b>{'X ' + playerX}</b></div> : <div className="pX">{'X ' + playerX}</div>}
@@ -128,9 +132,12 @@ export function Board(props)
       {spectator === true ?
         <div></div> 
         :
-        <div className="resetBtn">
-          <button className="button" type="button" onClick={resetBoard}>Reset Board</button> 
-        </div>
+        [winner !== null ?
+          <div className="resetBtn">
+            <button className="button" type="button" onClick={resetBoard}>Reset Board</button> 
+          </div>:
+          null
+        ]
       }
       </div>
     </div>

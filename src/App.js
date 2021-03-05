@@ -18,6 +18,26 @@ function App() {
   
   const [ emptyInput, setEmptyInput ] = useState(false);
   
+  const [ leaderBoard, setLeaderBoard ] = useState([]);
+  
+  useEffect(() => {
+    socket.on('all_users', (data) => {
+      setLeaderBoard(prevList => prevList = data.Users)
+    });
+    
+    socket.on('login', (data) => {
+      //console.log("data: " + data.userList);
+      setUsers(data['userList']);
+      setUserCounter(data['userNum']);
+    });
+    
+    socket.on('logout', (data) => {
+      setUsers(data['userList']);
+      setUserCounter(data['userNum']);
+    });
+    
+  }, []);
+  
   function changeLoginStatus()
   {
     setLoginStatus(currLogin => currLogin === 'loggedIn' ? 'loggedOut' : 'loggedIn');
@@ -81,7 +101,7 @@ function App() {
       return (
         <div className="wrap">
         <div className="gameBoard">
-          
+          <div className="turnH"><h1>Welcome to tic tac toe {currentUser}</h1></div>
           <div className="userBox">
             {users.map((item, index) => {
               const counter = userCounter[index];
@@ -99,6 +119,12 @@ function App() {
             
           </div>
           <Board usersList={ users } currentUser={currentUser} socket={socket}/>
+          
+          <div className="leaderBoard">
+            {leaderBoard.map((item, inbex) => (
+              <div>{item}</div>
+            ))}
+          </div>
           <div className="logOutbtn">
             <button className="button" type="button" onClick={logout}>Logout</button>
           </div>
@@ -109,23 +135,7 @@ function App() {
     
   }
   
-  useEffect(() => {
-    socket.on('all_users', (data) => {
-      console.log(data);
-    });
-    
-    socket.on('login', (data) => {
-      //console.log("data: " + data.userList);
-      setUsers(data['userList']);
-      setUserCounter(data['userNum']);
-    });
-    
-    socket.on('logout', (data) => {
-      setUsers(data['userList']);
-      setUserCounter(data['userNum']);
-    });
-    
-  }, []);
+  
   
   //console.log(users);
   

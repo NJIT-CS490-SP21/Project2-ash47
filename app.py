@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 
 # IMPORTANT: This must be AFTER creating db variable to prevent
 # circular import issues
-from models import Person
+from models import *
 
 db.create_all()
 
@@ -82,8 +82,17 @@ def add_user(data):
         db.session.add(newPerson)   
         db.session.commit()
         
-    print(Person.query.all())
-    userList.append(data['newUser'])
+    persons = Person.query.all()
+    print(db.session.query(Person.rank).filter_by(username=user).first())
+    
+    users = []
+    
+    for person in persons:
+        users.append(person.username)
+    
+    socketio.emit('all_users', {"Users": users})
+    
+    userList.append(user)
     
     if not userCount:
         userCount.append(1)
@@ -112,8 +121,9 @@ def get_current_board():
     socketio.emit('currentBoard', {'board': boardState, 'turn': currTurn})
     
 # Note that we don't call app.run anymore. We call socketio.run with app arg
-socketio.run(
-    app,
-    host=os.getenv('IP', '0.0.0.0'),
-    port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-)
+if __name__ == "__main__":
+    socketio.run(
+        app,
+        host=os.getenv('IP', '0.0.0.0'),
+        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
+    )
