@@ -19,11 +19,11 @@ export function Board(props)
       console.log(winner);
       if(winner !== null)
       {
-        if(winner === 'X')
+        if(winner === 'X' && props.currentUser === playerX)
         {
           props.socket.emit('changeStats', {'winner': playerX, 'losser': playerO})
         }
-        else
+        else if(winner === 'O' && props.currentUser === playerX)
         {
           props.socket.emit('changeStats', {'winner': playerO, 'losser': playerX})
         }

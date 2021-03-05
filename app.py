@@ -121,7 +121,16 @@ def get_current_board():
 @socketio.on('changeStats')
 
 def updateScore(data):
-    print(data)
+    updateWinner = Person.query.filter_by(username=data['winner']).first()
+    updateLosser = Person.query.filter_by(username=data['losser']).first()
+    
+    print(updateWinner.score)
+    updateWinner.score =  updateWinner.score + 1
+    updateLosser.score =  updateLosser.score - 1
+    print(updateWinner.score)
+    
+    db.session.commit()
+    
     
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":
