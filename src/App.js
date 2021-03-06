@@ -20,17 +20,10 @@ function App() {
   
   const [ emptyInput, setEmptyInput ] = useState(false);
   
-  const [ leaderBoard, setLeaderBoard ] = useState([]);
-  const [ score, setScore ] = useState([]);
-  
   useEffect(() => {
-    socket.on('all_users', (data) => {
-      setLeaderBoard(prevList => prevList = data.users);
-      setScore(prevList => prevList = data.score);
-    });
+    
     
     socket.on('login', (data) => {
-      //console.log("data: " + data.userList);
       setUsers(data['userList']);
       setUserCounter(data['userNum']);
     });
@@ -111,7 +104,7 @@ function App() {
           
           <Board usersList={ users } currentUser={currentUser} socket={socket}/>
           
-          <Leaderboard leaderBoard={leaderBoard} score={score} />
+          <Leaderboard socket={socket} />
           
           <div className="logOutbtn">
             <button className="button" type="button" onClick={logout}>Logout</button>
@@ -122,10 +115,6 @@ function App() {
     }
     
   }
-  
-  
-  
-  //console.log(users);
   
   return(
     <center>

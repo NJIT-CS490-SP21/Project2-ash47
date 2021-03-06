@@ -90,7 +90,7 @@ def add_user(data):
         users.append(person.username)
         score.append(person.score)
     
-    socketio.emit('all_users', {'users': users, 'score': score})
+    socketio.emit('update_score', {'users': users, 'score': score})
     
     userList.append(user)
     
@@ -132,7 +132,7 @@ def updateScore(data):
     db.session.commit()
     
     persons = Person.query.all()
-    '''
+    
     users = []
     score = []
     
@@ -141,8 +141,8 @@ def updateScore(data):
         score.append(person.score)
     print(users)
     print(score)
-    socketio.emit('all_users', {'users': users, 'score': score})
-    '''
+    socketio.emit('update_score', {'users': users, 'score': score})
+    
     
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":

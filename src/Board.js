@@ -6,25 +6,26 @@ import { isDraw } from './checkDraw';
 
 export function Board(props)
 {
-    const [board, setBoard] = useState([null, null, null, null, null, null, null, null, null]);
+    const [ board, setBoard ] = useState([null, null, null, null, null, null, null, null, null]);
     const [turn, setTurn] = useState("X");
     const [ spectator, setSpectator ] = useState(false);
     
     const playerX = props.usersList[0];
     const playerO = props.usersList[1];
-    const winner = calculateWinner(board, props.socket);
+    
+    const winner = calculateWinner(board);
     const draw = isDraw(board);
     
     useEffect(() => {
       if(winner !== null)
       {
-        if(winner === 'X' && props.currentUser === playerX)
+        if(winner === 'X' && props.currentUser === playerX )
         {
-          props.socket.emit('changeStats', {'winner': playerX, 'losser': playerO})
+          props.socket.emit('changeStats', {'winner': playerX, 'losser': playerO});
         }
-        else if(winner === 'O' && props.currentUser === playerX)
+        else if(winner === 'O' && props.currentUser === playerX )
         {
-          props.socket.emit('changeStats', {'winner': playerO, 'losser': playerX})
+          props.socket.emit('changeStats', {'winner': playerO, 'losser': playerX});
         }
       }
     }, [winner]);
