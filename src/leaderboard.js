@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 export function Leaderboard(props)
 {
   const [ leaderBoard, setLeaderBoard ] = useState([]);
   const [ score, setScore ] = useState([]);
   
   useEffect(() => {
+    props.socket.emit('get_leader_board', {user: props.currentUser});
+    
     props.socket.on('update_score', (data) => {
       setLeaderBoard(prevList => prevList = data.users);
       setScore(prevList => prevList = data.score);

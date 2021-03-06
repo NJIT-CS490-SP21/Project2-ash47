@@ -80,18 +80,6 @@ def add_user(data):
         db.session.add(newPerson)   
         db.session.commit()
         
-    persons = Person.query.all()
-    print(db.session.query(Person.rank).filter_by(username=user).first())
-    
-    users = []
-    score = []
-    
-    for person in persons:
-        users.append(person.username)
-        score.append(person.score)
-    
-    socketio.emit('update_score', {'users': users, 'score': score})
-    
     userList.append(user)
     
     if not userCount:
@@ -113,6 +101,23 @@ def remove_user(data):
     print(userCount)
     socketio.emit('logout',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
 
+
+@socketio.on('get_leader_board')
+
+def sendLB(data):
+    print("---------------------")
+    persons = Person.query.all()
+    print(db.session.query(Person.rank).filter_by(username=data['user']).first())
+    
+    users = []
+    score = []
+    
+    for person in persons:
+        users.append(person.username)
+        score.append(person.score)
+    
+    socketio.emit('update_score', {'users': users, 'score': score})
+    
 
 @socketio.on('currentBoard')
 
