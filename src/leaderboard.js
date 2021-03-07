@@ -14,15 +14,19 @@ export function Leaderboard(props)
   }, []);
   
   return (
-    <div className="leaderBoard">
+    <table className="leaderBoard">
       {leaderBoard.map((item, index) => {
         const userScore = score[index];
       
         return(
-          <div>{item + ' ' + userScore}</div>
+        <tr>
+          <div>{(index + 1) + '. '}</div>
+          <div>{item}</div>
+          <div>{userScore}</div>
+        </tr>
         );
           
       })}
-    </div>  
+    </table>  
   );
 }

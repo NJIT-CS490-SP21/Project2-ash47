@@ -87,7 +87,7 @@ body{
 
 .gameBoard{
     display: grid;
-    grid-template-columns: 235px 650px 235px;
+    grid-template-columns: 235px 650px;
     grid-template-rows: 85px 520px 30px;
     margin: 10px;
     gap: 5px;
@@ -103,12 +103,19 @@ body{
 }
 
 .leaderBoard {
+  position: absolute;
+  background-color: white;
   font-weight: bold;
   text-align: left;
   border: solid;
   border-radius: 15px;
   padding: 15px;
   overflow: auto;
+  height: 450px;
+  width: 700px;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
 }
 
 .board_wrap
@@ -192,4 +199,8 @@ body{
 .logOutbtn{
     grid-column-start: 1;
     grid-column-end: 4;
+}
+
+.lb{
+    width: 200px;
 }

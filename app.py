@@ -3,6 +3,7 @@ from flask import Flask, send_from_directory, json, session
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -105,14 +106,15 @@ def remove_user(data):
 @socketio.on('get_leader_board')
 
 def sendLB(data):
-    print("---------------------")
-    persons = Person.query.all()
-    print(db.session.query(Person.rank).filter_by(username=data['user']).first())
+    query_obj = db.session.query(Person)
+    desc_expression = sqlalchemy.sql.expression.desc(Person.score)
+    
+    order_by_query = query_obj.order_by(desc_expression)
     
     users = []
     score = []
     
-    for person in persons:
+    for person in order_by_query:
         users.append(person.username)
         score.append(person.score)
     
@@ -136,16 +138,18 @@ def updateScore(data):
     
     db.session.commit()
     
-    persons = Person.query.all()
+    query_obj = db.session.query(Person)
+    desc_expression = sqlalchemy.sql.expression.desc(Person.score)
+    
+    order_by_query = query_obj.order_by(desc_expression)
     
     users = []
     score = []
     
-    for person in persons:
+    for person in order_by_query:
         users.append(person.username)
         score.append(person.score)
-    print(users)
-    print(score)
+    
     socketio.emit('update_score', {'users': users, 'score': score})
     
     

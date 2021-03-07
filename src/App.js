@@ -20,6 +20,8 @@ function App() {
   
   const [ emptyInput, setEmptyInput ] = useState(false);
   
+  const [ showLB, setShowLB ] = useState(false);
+  
   useEffect(() => {
     
     
@@ -68,6 +70,11 @@ function App() {
     }
   }
   
+  function showLDBoard()
+  {
+    setShowLB(prevStat => prevStat === true ? false : true);
+  }
+  
   function Login(props)
   {
     const loginStatus = props.isLoggedIn;
@@ -97,19 +104,22 @@ function App() {
     {
       return (
         <div className="wrap">
-        <div className="gameBoard">
-          <div className="turnH"><h1>Welcome to tic tac toe {currentUser}</h1></div>
-          
-          <UserBox users={users} userCounter={userCounter} />
-          
-          <Board usersList={ users } currentUser={currentUser} socket={socket}/>
-          
-          <Leaderboard socket={socket} currentUser={currentUser}/>
-          
-          <div className="logOutbtn">
-            <button className="button" type="button" onClick={logout}>Logout</button>
+          <div className="gameBoard">
+            <div className="turnH"><h1>Welcome to tic tac toe {currentUser}</h1></div>
+            
+            <UserBox users={users} userCounter={userCounter} />
+            
+            <Board usersList={ users } currentUser={currentUser} socket={socket}/>
+            
+            
+            
+            <div className="logOutbtn">
+              <button className="button" type="button" onClick={logout}>Logout</button>
+            </div>
+            
+            <button className="button lb" type="button" onClick={showLDBoard}>Show Leaderboard</button>
           </div>
-        </div>
+          {showLB === true ? <Leaderboard socket={socket} currentUser={currentUser}/> : <div></div>}
         </div>
       );
     }
