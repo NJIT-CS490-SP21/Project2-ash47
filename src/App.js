@@ -20,8 +20,6 @@ function App() {
   
   const [ emptyInput, setEmptyInput ] = useState(false);
   
-  const [ showLB, setShowLB ] = useState(false);
-  
   useEffect(() => {
     
     
@@ -70,11 +68,6 @@ function App() {
     }
   }
   
-  function showLDBoard()
-  {
-    setShowLB(prevStat => prevStat === true ? false : true);
-  }
-  
   function Login(props)
   {
     const loginStatus = props.isLoggedIn;
@@ -117,9 +110,8 @@ function App() {
               <button className="button" type="button" onClick={logout}>Logout</button>
             </div>
             
-            <button className="button lb" type="button" onClick={showLDBoard}>Show Leaderboard</button>
           </div>
-          {showLB === true ? <Leaderboard socket={socket} currentUser={currentUser}/> : <div></div>}
+          <Leaderboard socket={socket} currentUser={currentUser}/>
         </div>
       );
     }

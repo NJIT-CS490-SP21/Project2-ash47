@@ -12,7 +12,6 @@ export function Board(props)
     
     const playerX = props.usersList[0];
     const playerO = props.usersList[1];
-    
     const winner = calculateWinner(board);
     const draw = isDraw(board);
     

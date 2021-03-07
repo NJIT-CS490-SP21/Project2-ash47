@@ -136,6 +136,9 @@ def updateScore(data):
     updateWinner.score =  updateWinner.score + 1
     updateLosser.score =  updateLosser.score - 1
     
+    print(updateWinner.score)
+    print(updateLosser.score)
+    
     db.session.commit()
     
     query_obj = db.session.query(Person)
