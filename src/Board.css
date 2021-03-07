@@ -124,7 +124,6 @@ tr{
 }
 
 .lbWrap{
-  position: absolute;
   background-color: white;
   border: solid;
   border-radius: 15px;
@@ -133,6 +132,10 @@ tr{
   height: 450px;
   width: 700px;
   font-size: 15px;
+  position: fixed;
+  top: 52%;
+  left: 45%;
+  transform: translate(-50%, -50%);
 }
 
 .board_wrap
