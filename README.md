@@ -1,5 +1,11 @@
 # Project2-ash47
 
+<details>
+    <summary><b>Description</b></summary>
+    This project creates a simple tic tac toe multiplayer game. In this game, all the users who join the server are added to a queue. The first two users in the queue are assigned X and O respectively. The rest of the users are considered spectators, they cannot make a move but can see the live game. As the players in front of the queue logs out, the players behind are promoted. This game also tracks the score for each user who logged in and saves it in a database.
+
+</details>
+
 # Flask and create-react-app
 
 
