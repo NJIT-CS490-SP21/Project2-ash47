@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory, json, session
+from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -19,18 +19,18 @@ db = SQLAlchemy(app)    # pylint: disable=C0103
 
 # IMPORTANT: This must be AFTER creating db variable to prevent
 # circular import issues
-from models import *    # pylint: disable=wrong-import-position
+from models import *    # pylint: disable=wrong-import-position, wildcard-import
 
 db.create_all()
 
-userList = []
-userCount = []
-currTurn = ['X']
-boardState = [None, None, None, None, None, None, None, None, None]
+USER_LIST = []
+USER_COUNT = []
+CURR_TURN = ['X']
+BOARD_STATE = [None, None, None, None, None, None, None, None, None]
 
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})   # pylint: disable=C0103
 
-socketio = SocketIO(
+socketio = SocketIO(    # pylint: disable=C0103
     app,
     cors_allowed_origins="*",
     json=json,
@@ -39,7 +39,6 @@ socketio = SocketIO(
 
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
-# Test
 def index(filename):
     return send_from_directory('./build', filename)
 
@@ -57,19 +56,22 @@ def on_disconnect():
 def on_move(data):
 
     try:
-        boardState[data['move']] = data['turn']
+        BOARD_STATE[data['move']] = data['turn']
 
         if data['turn'] == 'X':
-            currTurn[0] = 'O'
+            CURR_TURN[0] = 'O'
         else:
-            currTurn[0] = 'X'
+            CURR_TURN[0] = 'X'
 
-    except:
-        for i in range(len(boardState)):
-            boardState[i] = None
+    except KeyError:
+        for i in range(len(BOARD_STATE)):
+            BOARD_STATE[i] = None
 
     socketio.emit('move', data, broadcast=True, include_self=False)
 
+# When a clinet logs in this function:
+# 1. Checks if Client's user id is already in database if not then add it
+# 2. Add the client's user id to active user list
 @socketio.on('login')
 def add_user(data):
     user = data['newUser']
@@ -77,31 +79,31 @@ def add_user(data):
 
     if not exists:
         rows = db.session.query(Person).count()
-        newPerson = Person(username=user, score=100, rank=rows+1)
-        db.session.add(newPerson)
+        new_person = Person(username=user, score=100, rank=rows+1)
+        db.session.add(new_person)
         db.session.commit()
 
-    userList.append(user)
+    USER_LIST.append(user)
 
-    if not userCount:
-        userCount.append(1)
+    if not USER_COUNT:
+        USER_COUNT.append(1)
     else:
-        userCount.append(userCount[(len(userCount) - 1)] + 1)
+        USER_COUNT.append(USER_COUNT[(len(USER_COUNT) - 1)] + 1)
 
-    socketio.emit('login', {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)     # pylint: disable=line-too-long
+    socketio.emit('login', {'userList': USER_LIST, 'userNum': USER_COUNT}, broadcast=True, include_self=True)     # pylint: disable=line-too-long
 
-
+# When a client logs out this function remove client's user id from active user list
 @socketio.on('logout')
 def remove_user(data):
-    userList.remove(data['user'])
-    userCount.pop()
+    USER_LIST.remove(data['user'])
+    USER_COUNT.pop()
 
-    socketio.emit('logout', {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)    # pylint: disable=line-too-long
+    socketio.emit('logout', {'userList': USER_LIST, 'userNum': USER_COUNT}, broadcast=True, include_self=True)    # pylint: disable=line-too-long
 
 
+# This function sends leader board / db table upon client's request
 @socketio.on('get_leader_board')
-
-def sendLB(data):
+def send_leader_board(data):
     query_obj = db.session.query(Person)
     desc_expression = sqlalchemy.sql.expression.desc(Person.score)
 
@@ -117,23 +119,21 @@ def sendLB(data):
     socketio.emit('update_score', {'users': users, 'score': score})
 
 
+# This function sends current board (list) upon client's request
 @socketio.on('currentBoard')
 
 def get_current_board():
     print("Requeust recieved")
-    socketio.emit('currentBoard', {'board': boardState, 'turn': currTurn})
+    socketio.emit('currentBoard', {'board': BOARD_STATE, 'turn': CURR_TURN})
 
+# This function updates scores for winner and looser in db
 @socketio.on('changeStats')
+def update_score(data):
+    update_winner = Person.query.filter_by(username=data['winner']).first()
+    update_losser = Person.query.filter_by(username=data['losser']).first()
 
-def updateScore(data):
-    updateWinner = Person.query.filter_by(username=data['winner']).first()
-    updateLosser = Person.query.filter_by(username=data['losser']).first()
-
-    updateWinner.score = updateWinner.score + 1
-    updateLosser.score = updateLosser.score - 1
-
-    print(updateWinner.score)
-    print(updateLosser.score)
+    update_winner.score = update_winner.score + 1
+    update_losser.score = update_losser.score - 1
 
     db.session.commit()
 
