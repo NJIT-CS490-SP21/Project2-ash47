@@ -8,18 +8,18 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-app = Flask(__name__, static_folder='./build/static')
+app = Flask(__name__, static_folder='./build/static')   # pylint: disable=C0103
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 # Gets rid of a warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app)    # pylint: disable=C0103
 
 # IMPORTANT: This must be AFTER creating db variable to prevent
 # circular import issues
-from models import *
+from models import *    # pylint: disable=wrong-import-position
 
 db.create_all()
 
@@ -39,6 +39,7 @@ socketio = SocketIO(
 
 @app.route('/', defaults={"filename": "index.html"})
 @app.route('/<path:filename>')
+# Test
 def index(filename):
     return send_from_directory('./build', filename)
 
@@ -53,49 +54,49 @@ def on_disconnect():
     print('User disconnected!')
 
 @socketio.on('move')
-def on_move(data): 
-    
+def on_move(data):
+
     try:
         boardState[data['move']] = data['turn']
-        
+
         if data['turn'] == 'X':
             currTurn[0] = 'O'
         else:
             currTurn[0] = 'X'
-            
+
     except:
-        for i in range (len(boardState)):
+        for i in range(len(boardState)):
             boardState[i] = None
-    
-    socketio.emit('move',  data, broadcast=True, include_self=False)
-    
+
+    socketio.emit('move', data, broadcast=True, include_self=False)
+
 @socketio.on('login')
-def add_user(data): 
+def add_user(data):
     user = data['newUser']
     exists = db.session.query(Person.username).filter_by(username=user).first() is not None
-    
+
     if not exists:
         rows = db.session.query(Person).count()
         newPerson = Person(username=user, score=100, rank=rows+1)
-        db.session.add(newPerson)   
+        db.session.add(newPerson)
         db.session.commit()
-        
+
     userList.append(user)
-    
+
     if not userCount:
         userCount.append(1)
     else:
         userCount.append(userCount[(len(userCount) - 1)] + 1)
-        
-    socketio.emit('login',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
-    
-    
+
+    socketio.emit('login', {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)     # pylint: disable=line-too-long
+
+
 @socketio.on('logout')
-def remove_user(data): 
+def remove_user(data):
     userList.remove(data['user'])
     userCount.pop()
-    
-    socketio.emit('logout',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
+
+    socketio.emit('logout', {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)    # pylint: disable=line-too-long
 
 
 @socketio.on('get_leader_board')
@@ -103,54 +104,54 @@ def remove_user(data):
 def sendLB(data):
     query_obj = db.session.query(Person)
     desc_expression = sqlalchemy.sql.expression.desc(Person.score)
-    
+
     order_by_query = query_obj.order_by(desc_expression)
-    
+
     users = []
     score = []
-    
+
     for person in order_by_query:
         users.append(person.username)
         score.append(person.score)
-    
+
     socketio.emit('update_score', {'users': users, 'score': score})
-    
+
 
 @socketio.on('currentBoard')
 
 def get_current_board():
-    print("Requeust recieved");
+    print("Requeust recieved")
     socketio.emit('currentBoard', {'board': boardState, 'turn': currTurn})
-    
+
 @socketio.on('changeStats')
 
 def updateScore(data):
     updateWinner = Person.query.filter_by(username=data['winner']).first()
     updateLosser = Person.query.filter_by(username=data['losser']).first()
-    
-    updateWinner.score =  updateWinner.score + 1
-    updateLosser.score =  updateLosser.score - 1
-    
+
+    updateWinner.score = updateWinner.score + 1
+    updateLosser.score = updateLosser.score - 1
+
     print(updateWinner.score)
     print(updateLosser.score)
-    
+
     db.session.commit()
-    
+
     query_obj = db.session.query(Person)
     desc_expression = sqlalchemy.sql.expression.desc(Person.score)
-    
+
     order_by_query = query_obj.order_by(desc_expression)
-    
+
     users = []
     score = []
-    
+
     for person in order_by_query:
         users.append(person.username)
         score.append(person.score)
-    
+
     socketio.emit('update_score', {'users': users, 'score': score})
-    
-    
+
+
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":
     socketio.run(
