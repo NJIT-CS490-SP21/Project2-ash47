@@ -152,6 +152,13 @@ def update_score(data):
     socketio.emit('update_score', {'users': users, 'score': score})
 
 
+# When a client logs out this function remove client's user id from active user list
+@socketio.on('chat')
+def user_chat(data):
+    print(data)
+    socketio.emit('chat', data, broadcast=True, include_self=False)    # pylint: disable=line-too-long
+
+
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":
     socketio.run(
