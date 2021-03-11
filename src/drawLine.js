@@ -7,7 +7,7 @@ export function WinLine(props)
     }
     else
     {
-        if(props.winner_combo[0] === 0 && props.winner_combo[1] === 1 && props.winner_combo[2] === 3)
+        if(props.winner_combo[0] === 0 && props.winner_combo[1] === 1 && props.winner_combo[2] === 2)
         {
             console.log(props.winner_combo);
             return <div className="winner_wrap r1"></div>

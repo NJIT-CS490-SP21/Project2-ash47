@@ -38,17 +38,17 @@ tr{
 .winner_wrap.r1{
   content: '';
     height: 300px;
-    width: 10px;
+    width: 8px;
     background: black;
     transform: rotate(90deg);
     left: 49%;
-    top: -35%;
+    top: -34%;
 }
 
 .winner_wrap.r2{
   content: '';
     height: 300px;
-    width: 10px;
+    width: 8px;
     background: black;
     transform: rotate(90deg);
     left: 49%;
@@ -58,43 +58,43 @@ tr{
 .winner_wrap.r3{
   content: '';
     height: 300px;
-    width: 10px;
+    width: 8px;
     background: black;
     transform: rotate(90deg);
     left: 49%;
-    top: 35%;
+    top: 34%;
 }
 
 .winner_wrap.c1{
   content: '';
     height: 300px;
-    width: 10px;
+    width: 8px;
     background: black;
-    left: 25%;
+    left: 23%;
     top: 0%;
 }
 .winner_wrap.c2{
   content: '';
     height: 300px;
-    width: 10px;
+    width: 8px;
     background: black;
-    left: 50%;
+    left: 48%;
     top: 0%;
 }
 
 .winner_wrap.c3{
   content: '';
     height: 300px;
-    width: 10px;
+    width: 8px;
     background: black;
-    left: 75%;
+    left: 77%;
     top: 0%;
 }
 
 .winner_wrap.bsl{
   content: '';
     height: 390px;
-    width: 10px;
+    width: 8px;
     background: black;
     transform: rotate(45deg);
     left: 49%;
@@ -104,7 +104,7 @@ tr{
 .winner_wrap.fsl{
   content: '';
   height: 390px;
-  width: 10px;
+  width: 8px;
   background: black;
   transform: rotate(-45deg);
   left: 49%;
