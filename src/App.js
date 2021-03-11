@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { Board } from './Board.js';
 import { Leaderboard } from './leaderboard.js';
 import { UserBox } from './userbox.js';
+import { ChatBox } from './chatbox.js';
 import './Board.css';
 
 const socket = io(); // Connects to socket connection
@@ -103,6 +104,11 @@ function App() {
             <UserBox users={users} userCounter={userCounter} />
             
             <Board usersList={ users } currentUser={currentUser} socket={socket}/>
+            
+            
+            <div className="chatBox" >
+              <ChatBox user={currentUser} socket={socket}/>
+            </div>
             
             
             <div className="btn_wrap">

@@ -191,15 +191,23 @@ tr{
 
 .gameBoard{
     display: grid;
-    grid-template-columns: 235px 650px;
+    grid-template-columns: 245px 650px 245px;
     grid-template-rows: 85px 520px 30px;
     margin: 10px;
     gap: 55px;
 }
 
 .userBox{
-    background: #ffff;
+    background: #fff;
     font-weight: bold;
+    text-align: left;
+    padding: 15px;
+    overflow: auto;
+    box-shadow: 0 5px 14px rgba(0,0,0,.7);
+}
+
+.chatBox {
+  background: #fff;
     text-align: left;
     padding: 15px;
     overflow: auto;
