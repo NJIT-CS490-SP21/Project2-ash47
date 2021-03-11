@@ -3,7 +3,7 @@ import './Board.css';
 import { Square } from './square.js';
 import { calculateWinner } from './winner.js';
 import { isDraw } from './checkDraw';
-
+import { WinLine } from './drawLine';
 export function Board(props)
 {
     const [ board, setBoard ] = useState([null, null, null, null, null, null, null, null, null]);
@@ -12,7 +12,9 @@ export function Board(props)
     
     const playerX = props.usersList[0];
     const playerO = props.usersList[1];
-    const winner = calculateWinner(board);
+    const results = calculateWinner(board);
+    const winner = results.winner;
+    const winner_combo = results.combination;
     const draw = isDraw(board);
     
     useEffect(() => {
@@ -27,6 +29,8 @@ export function Board(props)
           props.socket.emit('changeStats', {'winner': playerO, 'losser': playerX});
         }
       }
+      
+      console.log(winner_combo);
     }, [winner]);
     
     useEffect(() => {
@@ -131,16 +135,19 @@ export function Board(props)
           ]
         }
         {turn==='X' ? <div className="pX"><b>{'X ' + playerX}</b></div> : <div className="pX">{'X ' + playerX}</div>}
-        <div className="board">
-          <Square id={0} value={board[0]} onClick={onClickAction} />
-          <Square id={1} value={board[1]} onClick={onClickAction} />
-          <Square id={2} value={board[2]} onClick={onClickAction} />
-          <Square id={3} value={board[3]} onClick={onClickAction} />
-          <Square id={4} value={board[4]} onClick={onClickAction} />
-          <Square id={5} value={board[5]} onClick={onClickAction} />
-          <Square id={6} value={board[6]} onClick={onClickAction} />
-          <Square id={7} value={board[7]} onClick={onClickAction} />
-          <Square id={8} value={board[8]} onClick={onClickAction} />
+        <div className="game">
+          <div className="board">
+            <Square id={0} value={board[0]} onClick={onClickAction} />
+            <Square id={1} value={board[1]} onClick={onClickAction} />
+            <Square id={2} value={board[2]} onClick={onClickAction} />
+            <Square id={3} value={board[3]} onClick={onClickAction} />
+            <Square id={4} value={board[4]} onClick={onClickAction} />
+            <Square id={5} value={board[5]} onClick={onClickAction} />
+            <Square id={6} value={board[6]} onClick={onClickAction} />
+            <Square id={7} value={board[7]} onClick={onClickAction} />
+            <Square id={8} value={board[8]} onClick={onClickAction} />
+          </div>
+          <WinLine winner_combo={winner_combo} />
         </div>
         {turn==='O' ? <div className="pO"><b>{'O ' + playerO}</b></div> : <div className="pO">{'O ' + playerO}</div>}
         {spectator === true ?

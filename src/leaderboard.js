@@ -26,7 +26,7 @@ export function Leaderboard(props)
     <button className="button lb" type="button" onClick={showLDBoard}>Show Leaderboard</button>
     {showLB === true ?
     <div className="lbWrap">
-    <b>Leaderboard</b>
+    <h2>Leaderboard</h2>
     <table className="leaderBoard">
       {leaderBoard.map((item, index) => {
         const userScore = score[index];

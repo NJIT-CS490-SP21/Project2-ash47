@@ -105,13 +105,13 @@ function App() {
             <Board usersList={ users } currentUser={currentUser} socket={socket}/>
             
             
-            
-            <div className="logOutbtn">
-              <button className="button" type="button" onClick={logout}>Logout</button>
+            <div className="btn_wrap">
+              <div className="logOutbtn">
+                <button className="button" type="button" onClick={logout}>Logout</button>
+              </div>
+              <Leaderboard socket={socket} currentUser={currentUser}/>
             </div>
-            
           </div>
-          <Leaderboard socket={socket} currentUser={currentUser}/>
         </div>
       );
     }
