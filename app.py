@@ -73,7 +73,6 @@ def on_move(data):
 def add_user(data): 
     user = data['newUser']
     exists = db.session.query(Person.username).filter_by(username=user).first() is not None
-    print(exists)
     
     if not exists:
         rows = db.session.query(Person).count()
@@ -88,8 +87,6 @@ def add_user(data):
     else:
         userCount.append(userCount[(len(userCount) - 1)] + 1)
         
-    print(userList)
-    print(userCount)
     socketio.emit('login',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
     
     
@@ -98,8 +95,6 @@ def remove_user(data):
     userList.remove(data['user'])
     userCount.pop()
     
-    print(userList)
-    print(userCount)
     socketio.emit('logout',  {'userList': userList, 'userNum': userCount}, broadcast=True, include_self=True)
 
 
