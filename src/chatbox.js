@@ -7,6 +7,7 @@ export function ChatBox(props)
     function clickHandler()
     {
         const userChat = inputRef.current.value;
+        inputRef.current.value = '';
         
         if(userChat !== '')
         {
@@ -40,7 +41,7 @@ export function ChatBox(props)
     }, []);
     
     return (
-        <div>
+        <div className="chatBox" >
             <div className="chat">
             {chat.map((item, index) => {
                 
@@ -51,7 +52,7 @@ export function ChatBox(props)
               );
             })}
             </div>
-            <input className="chatInput" ref={inputRef} type="text" placeholder="User name...."/>
+            <input className="chatInput" ref={inputRef} type="text" placeholder="Type message..."/>
             <button className="chatButton" type="submit" onClick= {clickHandler}>Submit</button>
         </div>
     );

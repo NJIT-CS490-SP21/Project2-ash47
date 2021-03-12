@@ -106,7 +106,7 @@ function App() {
             <Board usersList={ users } currentUser={currentUser} socket={socket}/>
             
             
-            <div className="chatBox" >
+            <div>
               <ChatBox user={currentUser} socket={socket}/>
             </div>
             
