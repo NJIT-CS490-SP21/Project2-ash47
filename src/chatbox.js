@@ -10,28 +10,44 @@ export function ChatBox(props)
         
         if(userChat !== '')
         {
-            setChat(prevList => [...prevList, userChat]);
+            setChat(prevList => [...prevList, (userChat + ' (' + props.user + ')')]);
             
-            props.socket.emit('chat', {chat: userChat});
+            props.socket.emit('chat', {chat: (userChat + ' (' + props.user + ')')});
         }
     }
     
     useEffect(() => {
+        props.socket.emit('currentChat', 'getChat');
         
-        props.socket.on('chat', (data) => {
-             setChat(prevList => [...prevList, data.chat]);
+        props.socket.on('currentChat', (data) => {
+            console.log(data);
+            
+            setChat((prevData) => {
+            let newBoard = [...prevData];
+            newBoard = data.board;
+            return newBoard;
+            });
         });
         
     }, []);
-    console.log(chat);
+    
+    useEffect(() => {
+        
+        props.socket.on('chat', (data) => {
+             setChat(prevList => [...prevList, data.chat ]);
+        });
+        
+    }, []);
+    
     return (
         <div>
             <div className="chat">
             {chat.map((item, index) => {
-              return (
-                  <div>
-                    {item}
-                  </div>
+                
+                return (
+                    <div>
+                        {item}
+                    </div>
               );
             })}
             </div>

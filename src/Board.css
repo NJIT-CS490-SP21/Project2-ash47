@@ -210,7 +210,6 @@ tr{
   background: #fff;
     text-align: left;
     padding: 15px;
-    overflow: auto;
     box-shadow: 0 5px 14px rgba(0,0,0,.7);
 }
 
@@ -335,6 +334,12 @@ tr{
 
 .lb{
     width: 200px;
+}
+
+.chat {
+  height: 475px;
+  overflow: auto;
+  word-wrap: break-word;
 }
 
 ::-webkit-scrollbar {

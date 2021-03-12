@@ -27,6 +27,7 @@ USER_LIST = []
 USER_COUNT = []
 CURR_TURN = ['X']
 BOARD_STATE = [None, None, None, None, None, None, None, None, None]
+USER_CHAT = []
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})   # pylint: disable=C0103
 
@@ -126,6 +127,12 @@ def get_current_board():
     print("Requeust recieved")
     socketio.emit('currentBoard', {'board': BOARD_STATE, 'turn': CURR_TURN})
 
+@socketio.on('currentChat')
+
+def get_current_chat(data):
+    print("Requeust recieved")
+    socketio.emit('currentChat', {'board': USER_CHAT}, broadcast=True, include_self=True)
+
 # This function updates scores for winner and looser in db
 @socketio.on('changeStats')
 def update_score(data):
@@ -155,7 +162,10 @@ def update_score(data):
 # When a client logs out this function remove client's user id from active user list
 @socketio.on('chat')
 def user_chat(data):
-    print(data)
+    USER_CHAT.append(data['chat'])
+    if len(USER_CHAT) > 50:
+        USER_CHAT.pop(0)
+    #print(USER_CHAT)
     socketio.emit('chat', data, broadcast=True, include_self=False)    # pylint: disable=line-too-long
 
 
@@ -164,5 +174,5 @@ if __name__ == "__main__":
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),
-        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
+        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),    # pylint: disable=invalid-envvar-default
     )
