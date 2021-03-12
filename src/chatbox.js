@@ -4,6 +4,8 @@ export function ChatBox(props)
     const inputRef = useRef(null);
     const [ chat, setChat ] = useState([]);
     
+    const messages = document.getElementById('chat');
+    
     function clickHandler()
     {
         const userChat = inputRef.current.value;
@@ -15,7 +17,23 @@ export function ChatBox(props)
             
             props.socket.emit('chat', {chat: (props.user + ': ' + userChat)});
         }
+        
     }
+    
+    function scrollToBottom() 
+    {
+        try
+        {
+            messages.scrollTop = messages.scrollHeight;
+        }
+        catch(err){}
+    }
+    
+    useEffect(() => {
+        
+        scrollToBottom();
+        
+    }, [chat])
     
     useEffect(() => {
         props.socket.emit('currentChat', 'getChat');
@@ -43,7 +61,7 @@ export function ChatBox(props)
     return (
         <div className="chatBox" >
             <h1 className='user_h1'>Chat</h1>
-            <div className="chat">
+            <div className="chat" id="chat">
             {chat.map((item, index) => {
                 
                 return (
