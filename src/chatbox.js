@@ -11,9 +11,9 @@ export function ChatBox(props)
         
         if(userChat !== '')
         {
-            setChat(prevList => [...prevList, (userChat + ' (' + props.user + ')')]);
+            setChat(prevList => [...prevList, (props.user + ': ' + userChat)]);
             
-            props.socket.emit('chat', {chat: (userChat + ' (' + props.user + ')')});
+            props.socket.emit('chat', {chat: (props.user + ': ' + userChat)});
         }
     }
     
@@ -42,13 +42,14 @@ export function ChatBox(props)
     
     return (
         <div className="chatBox" >
+            <h1 className='user_h1'>Chat</h1>
             <div className="chat">
             {chat.map((item, index) => {
                 
                 return (
-                    <div>
+                    <div><p>
                         {item}
-                    </div>
+                    </p></div>
               );
             })}
             </div>

@@ -3,20 +3,33 @@ export function UserBox(props)
 {
     return (
       <div className="userBox">
-        {props.users.map((item, index) => {
-          const counter = props.userCounter[index];
-          
-          return (
-          <div>
-            {index == 0 ? <div><b>Players: </b></div> : <b></b>}
-            <div key={counter}>
-              {counter + '. ' + item}
+        <h1 className='user_h1'>User list</h1>
+        <div className="usersList">
+          {props.users.map((item, index) => {
+            const counter = props.userCounter[index];
+            
+            return (
+            <div>
+              {index == 0 ? 
+                <div key={counter}><b><p>
+                  {counter + '. ' + item + ' X'}
+                </p></b></div> : 
+                [index == 1 ?
+                  
+                <div key={counter}><b><p>
+                  {counter + '. ' + item + ' O'}
+                </p></b></div>:
+                  
+                <div key={counter}><p>
+                  {counter + '. ' + item}
+                </p></div>
+                
+                ]
+              }
             </div>
-            {index == 1 ? <div><br></br><b>Spectators: </b></div> : <b></b>}
-          </div>
-          );
-        })}
-        
+            );
+          })}
+        </div>
       </div>  
     );
 }

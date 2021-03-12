@@ -155,7 +155,7 @@ export function Board(props)
           :
           [winner !== null || draw === true ?
             <div className="resetBtn">
-              <button className="button" type="button" onClick={resetBoard}>Reset Board</button> 
+              <button className="button lb" type="button" onClick={resetBoard}>Reset Board</button> 
             </div>:
             null
           ]

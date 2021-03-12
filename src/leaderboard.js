@@ -9,6 +9,16 @@ export function Leaderboard(props)
   function showLDBoard()
   {
     setShowLB(prevStat => prevStat === true ? false : true);
+    if(showLB === true)
+    {
+      let background = document.getElementById("gameBoard");
+      background.style.filter = "none";
+    }
+    else
+    {
+      let background = document.getElementById("gameBoard");
+      background.style.filter = "blur(5px)";
+    }
   }
   
   useEffect(() => {
@@ -22,29 +32,31 @@ export function Leaderboard(props)
   
   return (
     <div>
-    
-    <button className="button lb" type="button" onClick={showLDBoard}>Show Leaderboard</button>
-    {showLB === true ?
-    <div className="lbWrap">
-    <h2>Leaderboard</h2>
-    <table className="leaderBoard">
-      {leaderBoard.map((item, index) => {
-        const userScore = score[index];
-      
-        return(
-        <tr>
-          <th>{(index + 1) + '. '}</th>
-          <th>{item}</th>
-          <th>{userScore}</th>
-        </tr>
-        );
+      {showLB === false ? 
+        <button className="button lb" type="button" onClick={showLDBoard}>Show Leaderboard</button> : 
+        <button className="button lb" type="button" onClick={showLDBoard}>Hide Leaderboard</button>
+      }
+      {showLB === true ?
+        <div className="lbWrap">
+        <h2>Leaderboard</h2>
+        <table className="leaderBoard">
+          {leaderBoard.map((item, index) => {
+            const userScore = score[index];
           
-      })}
-    </table>  
-    </div>
-     :
-    <div></div>
-    }
+            return(
+            <tr>
+              <th>{(index + 1) + '. '}</th>
+              <th>{item}</th>
+              <th>{userScore}</th>
+            </tr>
+            );
+              
+          })}
+        </table>  
+        </div>
+         :
+        <div></div>
+      }
     </div>
     
   );

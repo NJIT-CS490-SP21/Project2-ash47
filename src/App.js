@@ -85,8 +85,7 @@ function App() {
             <br></br>
             <input className="input" ref={inputRef} type="text" placeholder="User name...."/>
             {emptyInput === false ? "" : <div className="errMsg">Please enter a valid username</div>}
-            <br></br>
-            <div><button className="button" type="submit" onClick= {logIn}>Submit</button></div>
+            <button className="button" type="submit" onClick= {logIn}>Submit</button>
           </div>
         </div>
         
@@ -98,7 +97,7 @@ function App() {
     {
       return (
         <div className="wrap">
-          <div className="gameBoard">
+          <div className="gameBoard"  id="gameBoard">
             <div className="turnH"><h1>Welcome to tic tac toe {currentUser}</h1></div>
             
             <UserBox users={users} userCounter={userCounter} />
@@ -113,11 +112,13 @@ function App() {
             
             <div className="btn_wrap">
               <div className="logOutbtn">
-                <button className="button" type="button" onClick={logout}>Logout</button>
+                <button className="button lb" type="button" onClick={logout}>Logout</button>
               </div>
-              <Leaderboard socket={socket} currentUser={currentUser}/>
+              
             </div>
           </div>
+          <br></br>
+          <Leaderboard socket={socket} currentUser={currentUser}/>
         </div>
       );
     }

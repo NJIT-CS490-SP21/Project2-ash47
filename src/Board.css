@@ -2,7 +2,6 @@
 
 body{
   margin: 0px;
-  /*background-image: url(https://media.istockphoto.com/vectors/vector-elearning-pattern-elearning-seamless-background-vector-id943758330?b=1&k=6&m=943758330&s=612x612&w=0&h=A8Aoy3e6ry01Xf-MDFhxPEi4u4TXera3dT8ea51l744=);*/
   background: linear-gradient(120deg, rgba(23, 190, 187, 1), rgba(240, 166, 202, 1));
 }
 
@@ -19,11 +18,11 @@ tr{
 }
 
 .loginBox {
-  background: #fff;
-    height: 320px;
-    width: 690px;
-    padding-top: 40px;
-    box-shadow: 0 5px 14px rgba(0,0,0,.7);
+  background: rgba(255, 255, 255, 0.1);
+  height: 275px;
+  width: 690px;
+  padding-top: 50px;
+  box-shadow: 1px 1px 12px rgb(0 0 0 / 10%);
 }
 
 .board {
@@ -185,16 +184,14 @@ tr{
 
 .gameBoard{
     display: grid;
-    grid-template-columns: 245px 650px 245px;
-    grid-template-rows: 85px 520px 30px;
+    grid-template-columns: 250px 650px 250px;
+    grid-template-rows: 85px 520px 35px;
     margin: 10px;
     box-shadow: 1px 1px 12px rgb(0 0 0 / 10%);
 }
 
 .userBox{
-   font-weight: bold;
     text-align: left;
-    padding: 15px;
     overflow: auto;
     background: rgba(255, 255, 255, 0.1);
     height: 100%;
@@ -204,7 +201,6 @@ tr{
 
 .chatBox {
   text-align: left;
-  padding: 15px;
   background: rgba(255, 255, 255, 0.1);
   height: 100%;
   border-top-right-radius: 0.2em;
@@ -221,7 +217,7 @@ tr{
 }
 
 .lbWrap{
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.09);
   padding: 15px;
   height: 450px;
   width: 700px;
@@ -264,10 +260,12 @@ tr{
 }
 
 .input {
+    color: white;
     width: 315px;
     height: 30px;
-    border-color: black;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    outline: none;
     font-size: 20px;
     padding: 5px;
     padding-left: 20px;
@@ -280,11 +278,11 @@ tr{
 
 .button {
     width: 100px;
-    height: 30px;
-    margin: 10px;
-    border-radius: 5px;
+    height: 40px;
+    border: none;
     background: white;
-    border-width: 1px;
+    font-size: 20px;
+    padding: 5px;
 }
 
 .button:hover{
@@ -292,6 +290,14 @@ tr{
     background-color: black;
     color: white;
 }
+
+.button.lb:hover{
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+
 
 .turnH {
     grid-row-start: 1;
@@ -315,6 +321,9 @@ tr{
 }
 .resetBtn{
     grid-column-end: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn_wrap{
@@ -333,12 +342,58 @@ tr{
 
 .lb{
     width: 200px;
+    color: white;
+    background: none;
+    height: fit-content;
 }
 
+
 .chat {
-  height: 475px;
+  height: 395px;
   overflow: auto;
+  padding: 15px;
   word-wrap: break-word;
+}
+
+.user_h1 {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 20px;
+  padding: 1em;
+  margin: 0;
+  font-weight: 300;
+  text-align: center;
+}
+
+.usersList{
+  padding: 15px;
+}
+
+.chatInput {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  outline: none;
+  height: 31px;
+  width: 180px;
+}
+
+.chatButton {
+  width: 66px;
+  height: 33px;
+  border: none;
+  color: inherit;
+  background: none;
+  text-transform: uppercase;
+}
+
+.chatButton:hover{
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+::-webkit-input-placeholder {
+   color: rgba(255, 255, 255, 0.9);
 }
 
 ::-webkit-scrollbar {
