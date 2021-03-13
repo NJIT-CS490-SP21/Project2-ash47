@@ -7,7 +7,7 @@ import { WinLine } from './drawLine';
 export function Board(props)
 {
     const [ board, setBoard ] = useState([null, null, null, null, null, null, null, null, null]);
-    const [turn, setTurn] = useState("X");
+    const [ turn, setTurn ] = useState("X");
     const [ spectator, setSpectator ] = useState(false);
     
     const playerX = props.usersList[0];
@@ -29,8 +29,6 @@ export function Board(props)
           props.socket.emit('changeStats', {'winner': playerO, 'losser': playerX});
         }
       }
-      
-      console.log(winner_combo);
     }, [winner]);
     
     useEffect(() => {
@@ -42,13 +40,9 @@ export function Board(props)
         setSpectator(true);
       }
       
-      props.socket.on('all_users', (data) => {
-        console.log(data);
-      });
-      
       props.socket.emit('currentBoard');
       
-        props.socket.on('currentBoard', (data) => {
+      props.socket.on('currentBoard', (data) => {
         if(mounted)
         {
           setBoard((prevData) => {

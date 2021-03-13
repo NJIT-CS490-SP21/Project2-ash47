@@ -1,3 +1,4 @@
+""" Server for tic tac toe app """
 import os
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO
@@ -8,81 +9,95 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-app = Flask(__name__, static_folder='./build/static')   # pylint: disable=C0103
+APP = Flask(__name__, static_folder="./build/static")
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+APP.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 # Gets rid of a warning
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+APP.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)    # pylint: disable=C0103
+DB = SQLAlchemy(APP)
 
 # IMPORTANT: This must be AFTER creating db variable to prevent
 # circular import issues
-from models import *    # pylint: disable=wrong-import-position, wildcard-import
+from models import *  # pylint: disable=wrong-import-position, wildcard-import
 
-db.create_all()
+DB.create_all()
 
 USER_LIST = []
 USER_COUNT = []
-CURR_TURN = ['X']
+CURR_TURN = ["X"]
 BOARD_STATE = [None, None, None, None, None, None, None, None, None]
 USER_CHAT = []
 
-cors = CORS(app, resources={r"/*": {"origins": "*"}})   # pylint: disable=C0103
+cors = CORS(APP, resources={r"/*": {"origins": "*"}})  # pylint: disable=C0103
 
-socketio = SocketIO(    # pylint: disable=C0103
-    app,
-    cors_allowed_origins="*",
-    json=json,
-    manage_session=False
+socketio = SocketIO(  # pylint: disable=C0103
+    APP, cors_allowed_origins="*", json=json, manage_session=False
 )
 
-@app.route('/', defaults={"filename": "index.html"})
-@app.route('/<path:filename>')
+
+@APP.route("/", defaults={"filename": "index.html"})
+@APP.route("/<path:filename>")
 def index(filename):
-    return send_from_directory('./build', filename)
+    """ return file """
+    return send_from_directory("./build", filename)
+
 
 # When a client connects from this Socket connection, this function is run
-@socketio.on('connect')
+@socketio.on("connect")
 def on_connect():
-    print('User connected!')
+    """ When a client connects from this Socket connection, this function is run  """
+    print("User connected!")
+
 
 # When a client disconnects from this Socket connection, this function is run
-@socketio.on('disconnect')
+@socketio.on("disconnect")
 def on_disconnect():
-    print('User disconnected!')
+    """ When a client disconnects from this Socket connection, this function is run """
+    print("User disconnected!")
 
-@socketio.on('move')
+
+@socketio.on("move")
 def on_move(data):
 
-    try:
-        BOARD_STATE[data['move']] = data['turn']
+    """ This function stores current board data into lits, and emit it back """
 
-        if data['turn'] == 'X':
-            CURR_TURN[0] = 'O'
+    try:
+        BOARD_STATE[data["move"]] = data["turn"]
+
+        if data["turn"] == "X":
+            CURR_TURN[0] = "O"
         else:
-            CURR_TURN[0] = 'X'
+            CURR_TURN[0] = "X"
 
     except KeyError:
         for i in range(len(BOARD_STATE)):
             BOARD_STATE[i] = None
 
-    socketio.emit('move', data, broadcast=True, include_self=False)
+    socketio.emit("move", data, broadcast=True, include_self=False)
+
 
 # When a clinet logs in this function:
 # 1. Checks if Client's user id is already in database if not then add it
 # 2. Add the client's user id to active user list
-@socketio.on('login')
+@socketio.on("login")
 def add_user(data):
-    user = data['newUser']
-    exists = db.session.query(Person.username).filter_by(username=user).first() is not None
+
+    """When a clinet logs in this function:
+    1. Checks if Client's user id is already in database if not then add it
+    2. Add the client's user id to active user list
+    """
+    user = data["newUser"]
+    exists = (
+        DB.session.query(Person.username).filter_by(username=user).first() is not None
+    )
 
     if not exists:
-        rows = db.session.query(Person).count()
-        new_person = Person(username=user, score=100, rank=rows+1)
-        db.session.add(new_person)
-        db.session.commit()
+        rows = DB.session.query(Person).count()
+        new_person = Person(username=user, score=100, rank=rows + 1)
+        DB.session.add(new_person)
+        DB.session.commit()
 
     USER_LIST.append(user)
 
@@ -91,21 +106,39 @@ def add_user(data):
     else:
         USER_COUNT.append(USER_COUNT[(len(USER_COUNT) - 1)] + 1)
 
-    socketio.emit('login', {'userList': USER_LIST, 'userNum': USER_COUNT}, broadcast=True, include_self=True)     # pylint: disable=line-too-long
+    socketio.emit(
+        "login",
+        {"userList": USER_LIST, "userNum": USER_COUNT},
+        broadcast=True,
+        include_self=True,
+    )  # pylint: disable=line-too-long
+
 
 # When a client logs out this function remove client's user id from active user list
-@socketio.on('logout')
+@socketio.on("logout")
 def remove_user(data):
-    USER_LIST.remove(data['user'])
+
+    """When a client logs out this function remove client's user id from active user list"""
+
+    USER_LIST.remove(data["user"])
     USER_COUNT.pop()
 
-    socketio.emit('logout', {'userList': USER_LIST, 'userNum': USER_COUNT}, broadcast=True, include_self=True)    # pylint: disable=line-too-long
+    socketio.emit(
+        "logout",
+        {"userList": USER_LIST, "userNum": USER_COUNT},
+        broadcast=True,
+        include_self=True,
+    )  # pylint: disable=line-too-long
 
 
-# This function sends leader board / db table upon client's request
-@socketio.on('get_leader_board')
+# This function sends leader board / DB table upon client's request
+@socketio.on("get_leader_board")
 def send_leader_board(data):
-    query_obj = db.session.query(Person)
+
+    """ This function sends leader board / DB table upon client's request """
+
+    print(data)
+    query_obj = DB.session.query(Person)
     desc_expression = sqlalchemy.sql.expression.desc(Person.score)
 
     order_by_query = query_obj.order_by(desc_expression)
@@ -117,34 +150,45 @@ def send_leader_board(data):
         users.append(person.username)
         score.append(person.score)
 
-    socketio.emit('update_score', {'users': users, 'score': score})
+    socketio.emit("update_score", {"users": users, "score": score})
 
 
 # This function sends current board (list) upon client's request
-@socketio.on('currentBoard')
-
+@socketio.on("currentBoard")
 def get_current_board():
+
+    """ This function sends current board (list) upon client's request """
+
     print("Requeust recieved")
-    socketio.emit('currentBoard', {'board': BOARD_STATE, 'turn': CURR_TURN})
+    socketio.emit("currentBoard", {"board": BOARD_STATE, "turn": CURR_TURN})
 
-@socketio.on('currentChat')
 
+@socketio.on("currentChat")
 def get_current_chat(data):
-    print("Requeust recieved")
-    socketio.emit('currentChat', {'board': USER_CHAT}, broadcast=True, include_self=True)
 
-# This function updates scores for winner and looser in db
-@socketio.on('changeStats')
+    """ Send previous chat board upon user request """
+
+    print(data)
+    socketio.emit(
+        "currentChat", {"board": USER_CHAT}, broadcast=True, include_self=True
+    )
+
+
+# This function updates scores for winner and looser in DB
+@socketio.on("changeStats")
 def update_score(data):
-    update_winner = Person.query.filter_by(username=data['winner']).first()
-    update_losser = Person.query.filter_by(username=data['losser']).first()
+
+    """ This function updates scores for winner and looser in DB """
+
+    update_winner = Person.query.filter_by(username=data["winner"]).first()
+    update_losser = Person.query.filter_by(username=data["losser"]).first()
 
     update_winner.score = update_winner.score + 1
     update_losser.score = update_losser.score - 1
 
-    db.session.commit()
+    DB.session.commit()
 
-    query_obj = db.session.query(Person)
+    query_obj = DB.session.query(Person)
     desc_expression = sqlalchemy.sql.expression.desc(Person.score)
 
     order_by_query = query_obj.order_by(desc_expression)
@@ -156,23 +200,31 @@ def update_score(data):
         users.append(person.username)
         score.append(person.score)
 
-    socketio.emit('update_score', {'users': users, 'score': score})
+    socketio.emit("update_score", {"users": users, "score": score})
 
 
 # When a client logs out this function remove client's user id from active user list
-@socketio.on('chat')
+@socketio.on("chat")
 def user_chat(data):
-    USER_CHAT.append(data['chat'])
+
+    """ When a client logs out this function remove client's user id from active user list """
+
+    USER_CHAT.append(data["chat"])
     if len(USER_CHAT) > 50:
         USER_CHAT.pop(0)
-    #print(USER_CHAT)
-    socketio.emit('chat', data, broadcast=True, include_self=False)    # pylint: disable=line-too-long
+    # print(USER_CHAT)
+    socketio.emit(
+        "chat", data, broadcast=True, include_self=False
+    )  # pylint: disable=line-too-long
 
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg
 if __name__ == "__main__":
+
     socketio.run(
-        app,
-        host=os.getenv('IP', '0.0.0.0'),
-        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),    # pylint: disable=invalid-envvar-default
+        APP,
+        host=os.getenv("IP", "0.0.0.0"),
+        port=8081
+        if os.getenv("C9_PORT")
+        else int(os.getenv("PORT", 8081)),  # pylint: disable=invalid-envvar-default
     )

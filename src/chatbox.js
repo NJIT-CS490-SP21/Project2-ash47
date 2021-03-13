@@ -39,8 +39,6 @@ export function ChatBox(props)
         props.socket.emit('currentChat', 'getChat');
         
         props.socket.on('currentChat', (data) => {
-            console.log(data);
-            
             setChat((prevData) => {
             let newBoard = [...prevData];
             newBoard = data.board;
