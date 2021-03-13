@@ -1,15 +1,29 @@
-import React from "react";
-import { useState } from "react";
-// import io from 'socket.io-client';
-
-// const socket = io();
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export function Square(props) {
+  const { id, value, onClick } = props;
+  const textLable = '';
+
   function clickHandler() {
-    if (props.value === null) {
-      props.onClick(props.id);
+    if (value === null) {
+      onClick(id);
     }
   }
 
-  return <div className={"box " + props.value} onClick={clickHandler}></div>;
+  return <div role="button" tabIndex={id} className={`box ${value}`} onClick={clickHandler} onKeyDown={clickHandler}>{textLable}</div>;
 }
+
+Square.propTypes = {
+  id: PropTypes.number,
+  value: PropTypes.string,
+  onClick: PropTypes.objectOf(PropTypes.object),
+};
+
+Square.defaultProps = {
+  id: PropTypes.number,
+  value: PropTypes.string,
+  onClick: PropTypes.objectOf(PropTypes.object),
+};
+
+export default Square;

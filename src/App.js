@@ -1,11 +1,12 @@
-import "./App.css";
-import { useState, useRef, useEffect } from "react";
-import io from "socket.io-client";
-import { Board } from "./Board.js";
-import { Leaderboard } from "./leaderboard.js";
-import { UserBox } from "./userbox.js";
-import { ChatBox } from "./chatbox.js";
-import "./Board.css";
+import './App.css';
+import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import io from 'socket.io-client';
+import { Board } from './Board';
+import { Leaderboard } from './leaderboard';
+import { UserBox } from './userbox';
+import { ChatBox } from './chatbox';
+import './Board.css';
 
 const socket = io(); // Connects to socket connection
 
@@ -15,36 +16,34 @@ function App() {
   const [users, setUsers] = useState([]);
   const [userCounter, setUserCounter] = useState([]);
 
-  const [loginStatus, setLoginStatus] = useState("loggedOut");
+  const [loginStatus, setLoginStatus] = useState('loggedOut');
   const [currentUser, setCurrentUser] = useState(null);
 
   const [emptyInput, setEmptyInput] = useState(false);
 
   useEffect(() => {
-    socket.on("login", (data) => {
-      setUsers(data["userList"]);
-      setUserCounter(data["userNum"]);
+    socket.on('login', (data) => {
+      setUsers(data.userList);
+      setUserCounter(data.userNum);
     });
 
-    socket.on("logout", (data) => {
-      setUsers(data["userList"]);
-      setUserCounter(data["userNum"]);
+    socket.on('logout', (data) => {
+      setUsers(data.userList);
+      setUserCounter(data.userNum);
     });
   }, []);
 
   function changeLoginStatus() {
-    setLoginStatus((currLogin) =>
-      currLogin === "loggedIn" ? "loggedOut" : "loggedIn"
-    );
+    setLoginStatus((currLogin) => (currLogin === 'loggedIn' ? 'loggedOut' : 'loggedIn'));
   }
 
   function logIn() {
     const userName = inputRef.current.value;
-    if (userName != "") {
+    if (userName !== '') {
       setCurrentUser(userName);
       changeLoginStatus();
 
-      socket.emit("login", { newUser: userName });
+      socket.emit('login', { newUser: userName });
     } else {
       setEmptyInput(true);
     }
@@ -52,25 +51,26 @@ function App() {
 
   function logout() {
     changeLoginStatus();
-    socket.emit("logout", { user: currentUser });
+    socket.emit('logout', { user: currentUser });
 
     if (currentUser === users[0] || currentUser === users[1]) {
-      let empty_list = [null, null, null, null, null, null, null, null, null];
-      socket.emit("move", { reset: empty_list });
+      const EmptyList = [null, null, null, null, null, null, null, null, null];
+      socket.emit('move', { reset: EmptyList });
     }
   }
 
   function Login(props) {
-    const loginStatus = props.isLoggedIn;
-
-    if (loginStatus !== "loggedIn") {
+    const { isLoggedIn } = props;
+    // console.log(isLoggedIn);
+    if (isLoggedIn !== 'loggedIn') {
+      // console.log(isLoggedIn);
       return (
         <div className="wrap">
           <div className="loginBox">
             <div className="heading">Welcome to my app..!!</div>
             <h3>Please enter your username to login</h3>
-            <br></br>
-            <br></br>
+            <br />
+            <br />
             <input
               className="input"
               ref={inputRef}
@@ -78,7 +78,7 @@ function App() {
               placeholder="User name...."
             />
             {emptyInput === false ? (
-              ""
+              ''
             ) : (
               <div className="errMsg">Please enter a valid username</div>
             )}
@@ -88,40 +88,49 @@ function App() {
           </div>
         </div>
       );
-    } else {
-      return (
-        <div className="wrap">
-          <div className="gameBoard" id="gameBoard">
-            <div className="turnH">
-              <h1>Welcome to tic tac toe {currentUser}</h1>
-            </div>
+    }
 
-            <UserBox users={users} userCounter={userCounter} />
+    return (
+      <div className="wrap">
+        <div className="gameBoard" id="gameBoard">
+          <div className="turnH">
+            <h1>
+              {`Welcome to tic tac toe, ${currentUser}`}
+            </h1>
+          </div>
 
-            <Board
-              usersList={users}
-              currentUser={currentUser}
-              socket={socket}
-            />
+          <UserBox users={users} userCounter={userCounter} />
 
-            <div>
-              <ChatBox user={currentUser} socket={socket} />
-            </div>
+          <Board
+            usersList={users}
+            currentUser={currentUser}
+            socket={socket}
+          />
 
-            <div className="btn_wrap">
-              <div className="logOutbtn">
-                <button className="button lb" type="button" onClick={logout}>
-                  Logout
-                </button>
-              </div>
+          <div>
+            <ChatBox user={currentUser} socket={socket} />
+          </div>
+
+          <div className="btn_wrap">
+            <div className="logOutbtn">
+              <button className="button lb" type="button" onClick={logout}>
+                Logout
+              </button>
             </div>
           </div>
-          <br></br>
-          <Leaderboard socket={socket} currentUser={currentUser} />
         </div>
-      );
-    }
+        <br />
+        <Leaderboard socket={socket} currentUser={currentUser} />
+      </div>
+    );
   }
+
+  Login.propTypes = {
+    isLoggedIn: PropTypes.string,
+  };
+  Login.defaultProps = {
+    isLoggedIn: PropTypes.string,
+  };
 
   return (
     <center>

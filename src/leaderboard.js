@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 export function Leaderboard(props) {
   const [leaderBoard, setLeaderBoard] = useState([]);
   const [score, setScore] = useState([]);
@@ -6,22 +8,22 @@ export function Leaderboard(props) {
   const [showLB, setShowLB] = useState(false);
 
   function showLDBoard() {
-    setShowLB((prevStat) => (prevStat === true ? false : true));
+    setShowLB((prevStat) => (prevStat !== true));
     if (showLB === true) {
-      let background = document.getElementById("gameBoard");
-      background.style.filter = "none";
+      const background = document.getElementById('gameBoard');
+      background.style.filter = 'none';
     } else {
-      let background = document.getElementById("gameBoard");
-      background.style.filter = "blur(5px)";
+      const background = document.getElementById('gameBoard');
+      background.style.filter = 'blur(5px)';
     }
   }
 
   useEffect(() => {
-    props.socket.emit("get_leader_board", { user: props.currentUser });
+    props.socket.emit('get_leader_board', { user: props.currentUser });
 
-    props.socket.on("update_score", (data) => {
-      setLeaderBoard((prevList) => (prevList = data.users));
-      setScore((prevList) => (prevList = data.score));
+    props.socket.on('update_score', (data) => {
+      setLeaderBoard(() => data.users);
+      setScore(() => data.score);
     });
   }, []);
 
@@ -45,7 +47,7 @@ export function Leaderboard(props) {
 
               return (
                 <tr>
-                  <th>{index + 1 + ". "}</th>
+                  <th>{`${index + 1}. `}</th>
                   <th>{item}</th>
                   <th>{userScore}</th>
                 </tr>
@@ -54,8 +56,20 @@ export function Leaderboard(props) {
           </table>
         </div>
       ) : (
-        <div></div>
+        <div />
       )}
     </div>
   );
 }
+
+Leaderboard.propTypes = {
+  currentUser: PropTypes.string,
+  socket: PropTypes.objectOf(PropTypes.object),
+};
+
+Leaderboard.defaultProps = {
+  currentUser: PropTypes.string,
+  socket: PropTypes.objectOf(PropTypes.object),
+};
+
+export default Leaderboard;

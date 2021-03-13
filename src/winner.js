@@ -10,7 +10,7 @@ export function calculateWinner(squares) {
     [2, 4, 6],
   ];
 
-  for (let i = 0; i < lines.length; i++) {
+  for (let i = 0; i < lines.length; i += 1) {
     const [a, b, c] = lines[i];
 
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
@@ -19,3 +19,5 @@ export function calculateWinner(squares) {
   }
   return { winner: null, combination: null };
 }
+
+export { calculateWinner as default };

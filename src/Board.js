@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import "./Board.css";
-import { Square } from "./square.js";
-import { calculateWinner } from "./winner.js";
-import { isDraw } from "./checkDraw";
-import { WinLine } from "./drawLine";
+import React, { useState, useEffect } from 'react';
+import './Board.css';
+import PropTypes from 'prop-types';
+import { Square } from './square';
+import { calculateWinner } from './winner';
+import { isDraw } from './checkDraw';
+import { WinLine } from './drawLine';
+
 export function Board(props) {
   const [board, setBoard] = useState([
     null,
@@ -16,95 +18,93 @@ export function Board(props) {
     null,
     null,
   ]);
-  const [turn, setTurn] = useState("X");
+  const [turn, setTurn] = useState('X');
   const [spectator, setSpectator] = useState(false);
 
-  const playerX = props.usersList[0];
-  const playerO = props.usersList[1];
+  const { usersList, currentUser, socket } = props;
+  const playerX = usersList[0];
+  const playerO = usersList[1];
   const results = calculateWinner(board);
-  const winner = results.winner;
-  const winner_combo = results.combination;
+  const { winner } = results;
+  const WinnerCombo = results.combination;
   const draw = isDraw(board);
 
   useEffect(() => {
     if (winner !== null) {
-      if (winner === "X" && props.currentUser === playerX) {
-        props.socket.emit("changeStats", { winner: playerX, losser: playerO });
-      } else if (winner === "O" && props.currentUser === playerX) {
-        props.socket.emit("changeStats", { winner: playerO, losser: playerX });
+      if (winner === 'X' && currentUser === playerX) {
+        socket.emit('changeStats', { winner: playerX, losser: playerO });
+      } else if (winner === 'O' && currentUser === playerX) {
+        socket.emit('changeStats', { winner: playerO, losser: playerX });
       }
     }
   }, [winner]);
 
   useEffect(() => {
-    let mounted = true;
-
-    if (props.currentUser !== playerX && props.currentUser !== playerO) {
+    if (currentUser !== playerX && currentUser !== playerO) {
       setSpectator(true);
     }
 
-    props.socket.emit("currentBoard");
+    socket.emit('currentBoard');
 
-    props.socket.on("currentBoard", (data) => {
-      if (mounted) {
-        setBoard((prevData) => {
-          let newBoard = [...prevData];
-          newBoard = data.board;
-          return newBoard;
-        });
-      }
+    socket.on('currentBoard', (data) => {
+      console.log(data.board);
+
+      setBoard((prevData) => {
+        console.log(data.board);
+        let newBoard = [...prevData];
+        newBoard = data.board;
+        return newBoard;
+      });
     });
-
-    return () => (mounted = false);
   }, []);
 
   function changeTurn() {
-    setTurn((prevTurn) => (prevTurn === "X" ? "O" : "X"));
+    setTurn((prevTurn) => (prevTurn === 'X' ? 'O' : 'X'));
   }
 
   function updateBoard(id) {
     setBoard((prevList) => {
-      let newBoard = [...prevList];
+      const newBoard = [...prevList];
       newBoard[id] = turn;
       return newBoard;
     });
 
     changeTurn();
 
-    props.socket.emit("move", { move: id, turn: turn });
+    socket.emit('move', { move: id, turn });
   }
 
   function onClickAction(id) {
     if (winner === null) {
-      if (props.currentUser === playerX && turn === "X") {
+      if (currentUser === playerX && turn === 'X') {
         updateBoard(id);
-      } else if (props.currentUser === playerO && turn === "O") {
+      } else if (currentUser === playerO && turn === 'O') {
         updateBoard(id);
       }
     }
   }
 
   function resetBoard() {
-    let empty_list = [null, null, null, null, null, null, null, null, null];
-    setBoard(empty_list);
-    setTurn("X");
+    const EmptyList = [null, null, null, null, null, null, null, null, null];
+    setBoard(EmptyList);
+    setTurn('X');
 
-    props.socket.emit("move", { reset: empty_list });
+    socket.emit('move', { reset: EmptyList });
   }
 
   useEffect(() => {
-    props.socket.on("move", (data) => {
+    socket.on('move', (data) => {
       changeTurn();
 
       setBoard((prevList) => {
-        let newBoard = [...prevList];
+        const newBoard = [...prevList];
         newBoard[data.move] = data.turn;
         return newBoard;
       });
 
       if (data.reset) {
         setBoard(data.reset);
-        setTurn("X");
+        setTurn('X');
       }
     });
   }, []);
@@ -114,33 +114,39 @@ export function Board(props) {
       <div className="board_grid">
         {draw === true ? (
           <div className="turnH">
-            <h1>It's a draw..!!</h1>
+            <h1>Draw..!!</h1>
           </div>
         ) : (
           [
             winner !== null ? (
               [
-                winner === "X" ? (
+                winner === 'X' ? (
                   <div className="turnH">
-                    <h1>Winner is: {winner + " " + playerX + "!!"}</h1>
+                    <h1>
+                      Winner is:
+                      {`${winner} ${playerX}!!`}
+                    </h1>
                   </div>
                 ) : (
                   <div className="turnH">
-                    <h1>Winner is: {winner + " " + playerO + "!!"}</h1>
+                    <h1>
+                      Winner is:
+                      {`${winner} ${playerO}!!`}
+                    </h1>
                   </div>
                 ),
               ]
             ) : (
-              <div className="turnH"></div>
+              <div className="turnH" />
             ),
           ]
         )}
-        {turn === "X" ? (
+        {turn === 'X' ? (
           <div className="pX">
-            <b>{"X " + playerX}</b>
+            <b>{`X ${playerX}`}</b>
           </div>
         ) : (
-          <div className="pX">{"X " + playerX}</div>
+          <div className="pX">{`X ${playerX}`}</div>
         )}
         <div className="game">
           <div className="board">
@@ -154,17 +160,17 @@ export function Board(props) {
             <Square id={7} value={board[7]} onClick={onClickAction} />
             <Square id={8} value={board[8]} onClick={onClickAction} />
           </div>
-          <WinLine winner_combo={winner_combo} />
+          <WinLine WinnerCombo={WinnerCombo} />
         </div>
-        {turn === "O" ? (
+        {turn === 'O' ? (
           <div className="pO">
-            <b>{"O " + playerO}</b>
+            <b>{`O ${playerO}`}</b>
           </div>
         ) : (
-          <div className="pO">{"O " + playerO}</div>
+          <div className="pO">{`O ${playerO}`}</div>
         )}
         {spectator === true ? (
-          <div></div>
+          <div />
         ) : (
           [
             winner !== null || draw === true ? (
@@ -184,3 +190,17 @@ export function Board(props) {
     </div>
   );
 }
+
+Board.propTypes = {
+  usersList: PropTypes.arrayOf(PropTypes.string),
+  currentUser: PropTypes.string,
+  socket: PropTypes.objectOf(PropTypes.object),
+};
+
+Board.defaultProps = {
+  usersList: PropTypes.arrayOf(PropTypes.string),
+  currentUser: PropTypes.string,
+  socket: PropTypes.objectOf(PropTypes.object),
+};
+
+export default Board;

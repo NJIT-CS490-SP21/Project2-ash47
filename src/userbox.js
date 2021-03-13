@@ -1,30 +1,35 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
 export function UserBox(props) {
+  const { users, userCounter } = props;
+
   return (
     <div className="userBox">
       <h1 className="user_h1">User list</h1>
       <div className="usersList">
-        {props.users.map((item, index) => {
-          const counter = props.userCounter[index];
+        {users.map((item, index) => {
+          const counter = userCounter[index];
 
           return (
             <div>
-              {index == 0 ? (
+              {index === 0 ? (
                 <div key={counter}>
                   <b>
-                    <p>{counter + ". " + item + " X"}</p>
+                    <p>{`${counter}. ${item} X`}</p>
                   </b>
                 </div>
               ) : (
                 [
-                  index == 1 ? (
+                  index === 1 ? (
                     <div key={counter}>
                       <b>
-                        <p>{counter + ". " + item + " O"}</p>
+                        <p>{`${counter}. ${item} O`}</p>
                       </b>
                     </div>
                   ) : (
                     <div key={counter}>
-                      <p>{counter + ". " + item}</p>
+                      <p>{`${counter}. ${item}`}</p>
                     </div>
                   ),
                 ]
@@ -36,3 +41,14 @@ export function UserBox(props) {
     </div>
   );
 }
+
+UserBox.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.string),
+  userCounter: PropTypes.number,
+};
+UserBox.defaultProps = {
+  users: PropTypes.arrayOf(PropTypes.string),
+  userCounter: PropTypes.number,
+};
+
+export default UserBox;
