@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 from dotenv import load_dotenv, find_dotenv
+from app_functions import *
 
 load_dotenv(find_dotenv())
 
@@ -62,19 +63,10 @@ def on_disconnect():
 def on_move(data):
 
     """ This function stores current board data into lits, and emit it back """
-
-    try:
-        BOARD_STATE[data["move"]] = data["turn"]
-
-        if data["turn"] == "X":
-            CURR_TURN[0] = "O"
-        else:
-            CURR_TURN[0] = "X"
-
-    except KeyError:
-        for i in range(len(BOARD_STATE)):
-            BOARD_STATE[i] = None
-
+    global BOARD_STATE, CURR_TURN
+    
+    BOARD_STATE, CURR_TURN = update_board(BOARD_STATE, CURR_TURN, data)
+    
     socketio.emit("move", data, broadcast=True, include_self=False)
 
 
@@ -89,15 +81,12 @@ def add_user(data):
     2. Add the client's user id to active user list
     """
     user = data["newUser"]
-    exists = (
-        DB.session.query(Person.username).filter_by(username=user).first() is not None
-    )
-
+    
+    exists = check_user(user)
+    
     if not exists:
-        rows = DB.session.query(Person).count()
-        new_person = Person(username=user, score=100, rank=rows + 1)
-        DB.session.add(new_person)
-        DB.session.commit()
+        add_new_user(user)
+    Person.query.all()
 
     USER_LIST.append(user)
 
@@ -105,7 +94,7 @@ def add_user(data):
         USER_COUNT.append(1)
     else:
         USER_COUNT.append(USER_COUNT[(len(USER_COUNT) - 1)] + 1)
-
+    
     socketio.emit(
         "login",
         {"userList": USER_LIST, "userNum": USER_COUNT},
@@ -136,20 +125,11 @@ def remove_user(data):
 def send_leader_board(data):
 
     """ This function sends leader board / DB table upon client's request """
-
-    print(data)
-    query_obj = DB.session.query(Person)
-    desc_expression = sqlalchemy.sql.expression.desc(Person.score)
-
-    order_by_query = query_obj.order_by(desc_expression)
-
-    users = []
-    score = []
-
-    for person in order_by_query:
-        users.append(person.username)
-        score.append(person.score)
-
+    
+    user_score = get_score()
+    
+    users, score = get_score_list(user_score)
+    
     socketio.emit("update_score", {"users": users, "score": score})
 
 
@@ -159,16 +139,12 @@ def get_current_board():
 
     """ This function sends current board (list) upon client's request """
 
-    print("Requeust recieved")
     socketio.emit("currentBoard", {"board": BOARD_STATE, "turn": CURR_TURN})
 
 
 @socketio.on("currentChat")
 def get_current_chat(data):
-
     """ Send previous chat board upon user request """
-
-    print(data)
     socketio.emit(
         "currentChat", {"board": USER_CHAT}, broadcast=True, include_self=True
     )
@@ -177,45 +153,22 @@ def get_current_chat(data):
 # This function updates scores for winner and looser in DB
 @socketio.on("changeStats")
 def update_score(data):
-
     """ This function updates scores for winner and looser in DB """
-
-    update_winner = Person.query.filter_by(username=data["winner"]).first()
-    update_losser = Person.query.filter_by(username=data["losser"]).first()
-
-    update_winner.score = update_winner.score + 1
-    update_losser.score = update_losser.score - 1
-
-    DB.session.commit()
-
-    query_obj = DB.session.query(Person)
-    desc_expression = sqlalchemy.sql.expression.desc(Person.score)
-
-    order_by_query = query_obj.order_by(desc_expression)
-
-    users = []
-    score = []
-
-    for person in order_by_query:
-        users.append(person.username)
-        score.append(person.score)
-
+    user_score = update_winner_score(data)
+    users, score = get_score_list(user_score)
     socketio.emit("update_score", {"users": users, "score": score})
 
 
 # When a client logs out this function remove client's user id from active user list
 @socketio.on("chat")
 def user_chat(data):
-
     """ When a client logs out this function remove client's user id from active user list """
-
     USER_CHAT.append(data["chat"])
     if len(USER_CHAT) > 50:
         USER_CHAT.pop(0)
-    # print(USER_CHAT)
     socketio.emit(
         "chat", data, broadcast=True, include_self=False
-    )  # pylint: disable=line-too-long
+    )
 
 
 # Note that we don't call app.run anymore. We call socketio.run with app arg

@@ -1,56 +1,56 @@
+'''
+    get_tracks_test.py
+    
+    This file tests get artist track fuction to check if function returns
+    expected URL when passing input list.
+    In this test we mock the random choice function so it always return the first
+    value on the aritist list.
+'''
+
 import unittest
 import unittest.mock as mock
 from unittest.mock import patch
 import os
 import sys
 
-# This lets you import from the parent directory (one level up)
-sys.path.append(os.path.abspath('../'))
-from app import add_user
-from models import *
+sys.path.append(os.path.abspath('../../'))
+from app import remove_user
 
-KEY_INPUT = "input"
-KEY_EXPECTED = "expected"
+INPUT = "input_artist_ids"
+EXPECTED_OUTPUT = "expected"
 
-INITIAL_USERNAME = 'user1'
-
-class AddUserTestCase(unittest.TestCase):
+class UpdateUserTestCase(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
             {
-                KEY_INPUT: 'naman',
-                KEY_EXPECTED: [INITIAL_USERNAME, 'naman'],
+                INPUT:  'Aman',
+                EXPECTED_OUTPUT: 'https://api.spotify.com/v1/artists/0Y5tJX1MQlPlqiwlOH1tJY/top-tracks'
             },
+            {
+                INPUT: None,
+                EXPECTED_OUTPUT: None
+            }
         ]
         
-        initial_person = Person(username=INITIAL_USERNAME, score=100, rank=1)
-        self.initial_db_mock = [initial_person]
-    
-    def mocked_db_session_add(self, username):
-        self.initial_db_mock.append(username)
-    
-    def mocked_db_session_commit(self):
-        pass
-    
-    def mocked_person_query_all(self):
-        return self.initial_db_mock
-    
-    def test_success(self):
+    def mocked_random_choice(self, artist_id):
+        return artist_id[0]
+
+    def test_add_user(self):
         for test in self.success_test_params:
-            with patch('app.db.session.add', self.mocked_db_session_add):
-                with patch('app.db.session.commit', self.mocked_db_session_commit):
-                    with patch('models.Person.query') as mocked_query:
-                        mocked_query.all = self.mocked_person_query_all
+            # TODO: Mock random.choice to always return the 0 index
+            
+            with patch('get_tracks.random.choice', self.mocked_random_choice):
+                pass
+            
+                # TODO: Make a call to add user with your test inputs
+                # then assign it to a variable
+                actual_result = get_artist_url(test[INPUT])
+                
+                # Assign the expected output as a variable from test
+                expected_result = test[EXPECTED_OUTPUT]
     
-                        print(self.initial_db_mock)
-                        actual_result = add_user(test[KEY_INPUT])
-                        print(actual_result)
-                        expected_result = test[KEY_EXPECTED]
-                        print(self.initial_db_mock)
-                        print(expected_result)
-                        
-                        self.assertEqual(len(actual_result), len(expected_result))
-                        self.assertEqual(actual_result[1], expected_result[1])
+                # Use assert checks to see compare values of the results
+                self.assertEqual(actual_result, expected_result)
 
 
 if __name__ == '__main__':

@@ -44,11 +44,11 @@ export function UserBox(props) {
 
 UserBox.propTypes = {
   users: PropTypes.arrayOf(PropTypes.string),
-  userCounter: PropTypes.number,
+  userCounter: PropTypes.arrayOf(PropTypes.number),
 };
 UserBox.defaultProps = {
   users: PropTypes.arrayOf(PropTypes.string),
-  userCounter: PropTypes.number,
+  userCounter: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default UserBox;

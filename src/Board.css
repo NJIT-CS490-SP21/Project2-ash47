@@ -1,10 +1,7 @@
 body {
   margin: 0px;
-  background: linear-gradient(
-    120deg,
-    rgba(23, 190, 187, 1),
-    rgba(240, 166, 202, 1)
-  );
+  background-color: #bdd4e7;
+  background-image: linear-gradient(315deg, #bdd4e7 0%, #8693ab 74%);
 }
 
 th {
@@ -194,6 +191,7 @@ tr {
   grid-template-columns: 250px 650px 250px;
   grid-template-rows: 85px 520px 35px;
   margin: 10px;
+  background: rgba(0, 0, 0, .05);
   box-shadow: 1px 1px 12px rgb(0 0 0 / 10%);
 }
 
