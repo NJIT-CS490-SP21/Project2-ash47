@@ -146,7 +146,7 @@ export function Board(props) {
             <b>{`X ${playerX}`}</b>
           </div>
         ) : (
-          <div className="pX">{`X ${playerX}`}</div>
+          <div className="pX">{`X: ${playerX}`}</div>
         )}
         <div className="game">
           <div className="board">
@@ -167,7 +167,7 @@ export function Board(props) {
             <b>{`O ${playerO}`}</b>
           </div>
         ) : (
-          <div className="pO">{`O ${playerO}`}</div>
+          <div className="pO">{`O: ${playerO}`}</div>
         )}
         {spectator === true ? (
           <div />

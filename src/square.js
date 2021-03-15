@@ -11,7 +11,7 @@ export function Square(props) {
     }
   }
 
-  return <div role="button" tabIndex={id} className={`box ${value}`} onClick={clickHandler} onKeyDown={clickHandler}>{textLable}</div>;
+  return <div role="button" tabIndex={id} id={id} className={`box ${value}`} onClick={clickHandler} onKeyDown={clickHandler}>{textLable}</div>;
 }
 
 Square.propTypes = {

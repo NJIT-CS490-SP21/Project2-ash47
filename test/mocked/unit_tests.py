@@ -14,7 +14,9 @@ import os
 import sys
 
 sys.path.append(os.path.abspath('../../'))
-from app import remove_user
+from app_functions import *
+sys.path.append(os.path.abspath('../../'))
+from models import *
 
 INPUT = "input_artist_ids"
 EXPECTED_OUTPUT = "expected"
@@ -23,35 +25,29 @@ class UpdateUserTestCase(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
             {
-                INPUT:  'Aman',
-                EXPECTED_OUTPUT: 'https://api.spotify.com/v1/artists/0Y5tJX1MQlPlqiwlOH1tJY/top-tracks'
+                INPUT:  {'winner': 'Aman', 'losser': 'Joe'},
+                EXPECTED_OUTPUT: [101, 100, 99]
             },
-            {
-                INPUT: None,
-                EXPECTED_OUTPUT: None
-            }
         ]
+        initial_person = Person(username='Aman', score='100', rank=1)
+        second_person = Person(username='Joe', score='100', rank=1)
+        third_person = Person(username='Jack', score='100', rank=1)
+        self.initial_db_mock = [initial_person, second_person, third_person]
         
-    def mocked_random_choice(self, artist_id):
-        return artist_id[0]
+    def mocked_query_filter(self, name):
+        return Person.query.filter_by(username=data["winner"]).first()
+            
+    def mocked_commit(self):
+        pass
 
-    def test_add_user(self):
+    def test_update_score(self):
         for test in self.success_test_params:
-            # TODO: Mock random.choice to always return the 0 index
-            
-            with patch('get_tracks.random.choice', self.mocked_random_choice):
-                pass
-            
-                # TODO: Make a call to add user with your test inputs
-                # then assign it to a variable
-                actual_result = get_artist_url(test[INPUT])
-                
-                # Assign the expected output as a variable from test
-                expected_result = test[EXPECTED_OUTPUT]
-    
-                # Use assert checks to see compare values of the results
-                self.assertEqual(actual_result, expected_result)
-
+            with patch('app_functions.Person.query.filter_by', self.mocked_query_filter):
+                with patch('app_functions.DB.session.commit', self.mocked_commit):
+                    actual_result = update_winner_score(test[INPUT])
+                    expected_result = test[EXPECTED_OUTPUT]
+                    
+                    self.assertEqual(actual_result, expected_result)
 
 if __name__ == '__main__':
     unittest.main()

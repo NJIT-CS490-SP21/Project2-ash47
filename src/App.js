@@ -40,6 +40,7 @@ function App() {
   function logIn() {
     const userName = inputRef.current.value;
     if (userName !== '') {
+      setEmptyInput(false);
       setCurrentUser(userName);
       changeLoginStatus();
 
@@ -66,7 +67,7 @@ function App() {
       // console.log(isLoggedIn);
       return (
         <div className="wrap">
-          <div className="loginBox">
+          <div className="loginBox" id="loginBox">
             <div className="heading">Welcome to my app..!!</div>
             <h3>Please enter your username to login</h3>
             <br />
