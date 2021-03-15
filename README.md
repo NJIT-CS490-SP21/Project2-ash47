@@ -15,14 +15,13 @@ Run following commands in your terminal:
 1.  ```bash
     npm install
     ```
-2.  ````bash
-        pip install -r requirements.txt
-        ```
-    alternate
-
-    ````
-
-3.  ```bash
+2.  ```bash
+    pip install -r requirements.txt
+    ```
+    
+    Alternate
+    
+2.  ```bash
     sudo pip install -r requirements.txt
     ```
 
