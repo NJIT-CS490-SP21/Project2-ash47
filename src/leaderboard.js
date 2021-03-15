@@ -14,7 +14,7 @@ export function Leaderboard(props) {
       background.style.filter = 'none';
     } else {
       const background = document.getElementById('gameBoard');
-      background.style.filter = 'blur(5px)';
+      background.style.filter = 'blur(5px) opacity(0.1)';
     }
   }
 

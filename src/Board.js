@@ -47,10 +47,7 @@ export function Board(props) {
     socket.emit('currentBoard');
 
     socket.on('currentBoard', (data) => {
-      console.log(data.board);
-
       setBoard((prevData) => {
-        console.log(data.board);
         let newBoard = [...prevData];
         newBoard = data.board;
         return newBoard;
