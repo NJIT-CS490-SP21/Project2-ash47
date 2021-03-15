@@ -41,19 +41,20 @@ export function Leaderboard(props) {
       {showLB === true ? (
         <div className="lbWrap">
           <h2>Leaderboard</h2>
-          <table className="leaderBoard">
-            {leaderBoard.map((item, index) => {
-              const userScore = score[index];
-
-              return (
-                <tr>
-                  <th>{`${index + 1}. `}</th>
-                  <th>{item}</th>
-                  <th>{userScore}</th>
-                </tr>
-              );
-            })}
-          </table>
+          <div className="lb_list_wrap">
+            <table className="leaderBoard">
+              {leaderBoard.map((item, index) => {
+                const userScore = score[index];
+                return (
+                  <tr>
+                    <th>{`${index + 1}. `}</th>
+                    <th>{item}</th>
+                    <th>{userScore}</th>
+                  </tr>
+                );
+              })}
+            </table>
+          </div>
         </div>
       ) : (
         <div />

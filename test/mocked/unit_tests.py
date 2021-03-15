@@ -25,29 +25,32 @@ class UpdateUserTestCase(unittest.TestCase):
     def setUp(self):
         self.success_test_params = [
             {
-                INPUT:  {'winner': 'Aman', 'losser': 'Joe'},
-                EXPECTED_OUTPUT: [101, 100, 99]
+                INPUT:  'Joe',
+                EXPECTED_OUTPUT: ['Aman', 'Joe']
             },
         ]
         initial_person = Person(username='Aman', score='100', rank=1)
-        second_person = Person(username='Joe', score='100', rank=1)
-        third_person = Person(username='Jack', score='100', rank=1)
-        self.initial_db_mock = [initial_person, second_person, third_person]
+        self.initial_db_mock = [initial_person]
         
-    def mocked_query_filter(self, name):
-        return Person.query.filter_by(username=data["winner"]).first()
+    def mocked_db_session_add(self, username):
+        self.initial_db_mock.append(username)
             
-    def mocked_commit(self):
+    def mocked_db_session_commit(self):
         pass
+    
+    def mocked_person_query_all(self):
+        return self.initial_db_mock
 
-    def test_update_score(self):
+    def test_add_new_user(self):
         for test in self.success_test_params:
-            with patch('app_functions.Person.query.filter_by', self.mocked_query_filter):
-                with patch('app_functions.DB.session.commit', self.mocked_commit):
-                    actual_result = update_winner_score(test[INPUT])
-                    expected_result = test[EXPECTED_OUTPUT]
-                    
-                    self.assertEqual(actual_result, expected_result)
+            with patch('app_functions.DB.session.add', self.mocked_db_session_add):
+                with patch('app_functions.DB.session.commit', self.mocked_db_session_commit):
+                    with patch('models.Person.query') as mocked_query:
+                        mocked_query.all = self.mocked_person_query_all
+                        actual_result = add_new_user(test[INPUT])
+                        expected_result = test[EXPECTED_OUTPUT]
+                        
+                        self.assertEqual(actual_result, expected_result)
 
 if __name__ == '__main__':
     unittest.main()
