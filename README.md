@@ -1,4 +1,4 @@
-# Project2-ash47
+# Tic-Tac-Toe
 
 <details>
     <summary><b>Description</b></summary>
