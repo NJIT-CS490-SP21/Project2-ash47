@@ -1,14 +1,13 @@
 # Tic-Tac-Toe
 
-<details>
-    <summary><b>Description</b></summary>
-    This project creates a simple tic tac toe multiplayer game. In this game, all the users who join the server are added to a queue. The first two users in the queue are assigned X and O respectively. The rest of the users are considered spectators, they cannot make a move but can see the live game. As the players in front of the queue logs out, the players behind are promoted. This game also tracks the score for each user who logged in and saves it in a database.
+<b>Description</b>
 
-</details>
+This project creates a simple tic tac toe multiplayer game. In this game, all the users who join the server are added to a queue. The first two users in the queue are assigned X and O respectively. The rest of the users are considered spectators, they cannot make a move but can see the live game. As the players in front of the queue logs out, the players behind are promoted. This game also tracks the score for each user who logged in and saves it in a database.
 
-## Screenshots
+<img src="https://github.com/NJIT-CS490-SP21/React-Tic-Tac-Toe/blob/main/Tic-Tac-Toe.PNG" width=600>
+<img src="https://github.com/NJIT-CS490-SP21/React-Tic-Tac-Toe/blob/main/Tic-Tac-Toe-leaderboard.PNG" width=600>
 
-<img src="https://github.com/CS388-Group-Project-App/Gamerful/blob/master/Sprint1-Walkthorugh.gif" width=350>
+Link: https://sleepy-wave-01676.herokuapp.com/
 
 # Flask and create-react-app
 
