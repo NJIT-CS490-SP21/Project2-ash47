@@ -6,6 +6,10 @@
 
 </details>
 
+## Screenshots
+
+<img src="https://github.com/CS388-Group-Project-App/Gamerful/blob/master/Sprint1-Walkthorugh.gif" width=350>
+
 # Flask and create-react-app
 
 ### Requirements
